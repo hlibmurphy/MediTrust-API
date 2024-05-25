@@ -12,15 +12,13 @@ import com.github.edocapi.repository.RoleRepository;
 import com.github.edocapi.repository.UserRepository;
 import com.github.edocapi.security.JwtUtil;
 import com.github.edocapi.service.AuthenticationService;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Authenticator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +31,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtUtil jwtUtil;
 
     @Override
-    public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto login(UserLoginRequestDto loginRequestDto) {
+        loginRequestDto.setPhone(parsePhoneNumber(loginRequestDto.getPhone()));
+
         final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestDto.getPhone(),
-                        requestDto.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getPhone(),
+                        loginRequestDto.getPassword())
         );
 
         String token = jwtUtil.generateToken(authentication.getName());
@@ -44,21 +44,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserRegisterResponseDto register(UserRegisterRequestDto requestDto) {
-        if (userRepository.findByPhone(requestDto.getPhone()).isPresent()) {
+    public UserRegisterResponseDto register(UserRegisterRequestDto registerRequestDto) {
+        registerRequestDto.setPhone(parsePhoneNumber(registerRequestDto.getPhone()));
+
+        if (userRepository.findByPhone(registerRequestDto.getPhone()).isPresent()) {
             throw new RegistrationException("User with this phone already exists: "
-                    + requestDto.getPhone());
+                    + registerRequestDto.getPhone());
         }
 
-        User user = userMapper.toModel(requestDto);
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        User user = userMapper.toModel(registerRequestDto);
+        user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
 
         Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
-                () -> new RuntimeException("Cannot find a role" + Role.RoleName.ROLE_USER));
+                () -> new RuntimeException("Cannot find a role " + Role.RoleName.ROLE_USER));
         userRole.setName(Role.RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
+    }
+
+    private String parsePhoneNumber(String phone) {
+        return phone.substring(phone.length() - 10);
     }
 }

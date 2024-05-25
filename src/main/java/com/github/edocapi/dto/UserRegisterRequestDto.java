@@ -1,8 +1,10 @@
 package com.github.edocapi.dto;
 
 import jakarta.validation.constraints.Email;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
 @Data
 public class UserRegisterRequestDto {
@@ -12,7 +14,8 @@ public class UserRegisterRequestDto {
     @NotEmpty
     private String lastName;
 
-    @NotEmpty
+    @NotBlank
+    @Pattern(regexp = "^\\+?3?8?(0\\d{9})$")
     private String phone;
 
     @Email

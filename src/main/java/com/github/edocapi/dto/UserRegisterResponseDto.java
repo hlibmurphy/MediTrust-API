@@ -1,9 +1,8 @@
 package com.github.edocapi.dto;
 
 import com.github.edocapi.model.Role;
-import lombok.Data;
-
 import java.util.Set;
+import lombok.Data;
 
 @Data
 public class UserRegisterResponseDto {

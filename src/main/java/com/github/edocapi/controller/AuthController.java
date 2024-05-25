@@ -19,7 +19,8 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public UserRegisterResponseDto register(@Validated @RequestBody UserRegisterRequestDto requestDto) {
+    public UserRegisterResponseDto register(
+            @Validated @RequestBody UserRegisterRequestDto requestDto) {
         return authenticationService.register(requestDto);
     }
 
