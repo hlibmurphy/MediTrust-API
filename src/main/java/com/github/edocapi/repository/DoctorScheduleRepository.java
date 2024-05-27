@@ -1,9 +1,9 @@
 package com.github.edocapi.repository;
 
-import com.github.edocapi.model.TimeSlot;
+import com.github.edocapi.model.DoctorSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
+public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, Integer> {
 }

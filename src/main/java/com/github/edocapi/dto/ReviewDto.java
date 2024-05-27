@@ -4,6 +4,6 @@ public record ReviewDto(
         Long id,
         String text,
         int rating,
-        DoctorDto doctor
+        DoctorDtoWithoutScheduleId doctor
 ) {
 }

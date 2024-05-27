@@ -3,6 +3,7 @@ package com.github.edocapi.mapper;
 import com.github.edocapi.config.MapperConfig;
 import com.github.edocapi.dto.CreateDoctorRequestDto;
 import com.github.edocapi.dto.DoctorDto;
+import com.github.edocapi.dto.DoctorDtoWithoutScheduleId;
 import com.github.edocapi.model.Doctor;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -11,9 +12,12 @@ import org.springframework.data.domain.Page;
 
 @Mapper(config = MapperConfig.class)
 public interface DoctorMapper {
+    @Mapping(target = "scheduleId", source = "schedule.id")
     DoctorDto toDto(Doctor doctor);
 
-    List<DoctorDto> toDtos(Page<Doctor> doctors);
+    DoctorDtoWithoutScheduleId toDtoWithoutSchedule(Doctor doctor);
+
+    List<DoctorDtoWithoutScheduleId> toDtos(Page<Doctor> doctors);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "reviews", ignore = true)

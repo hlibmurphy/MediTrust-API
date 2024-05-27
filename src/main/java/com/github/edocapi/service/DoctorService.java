@@ -2,15 +2,16 @@ package com.github.edocapi.service;
 
 import com.github.edocapi.dto.CreateDoctorRequestDto;
 import com.github.edocapi.dto.DoctorDto;
+import com.github.edocapi.dto.DoctorDtoWithoutScheduleId;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface DoctorService {
-    List<DoctorDto> findAll(Pageable pageable);
+    List<DoctorDtoWithoutScheduleId> findAll(Pageable pageable);
 
-    DoctorDto findById(Long doctorId);
+    DoctorDtoWithoutScheduleId findById(Long doctorId);
 
     DoctorDto save(CreateDoctorRequestDto doctorRequestDto);
 
-    DoctorDto update(Long doctorId, CreateDoctorRequestDto doctorRequestDto);
+    DoctorDtoWithoutScheduleId update(Long doctorId, CreateDoctorRequestDto doctorRequestDto);
 }

@@ -9,4 +9,6 @@ public interface ReviewService {
     List<ReviewDto> findAll(Pageable pageable);
 
     ReviewDto save(CreateReviewRequestDto reviewRequestDto);
+
+    List<ReviewDto> findByDoctorId(Long doctorId, Pageable pageable);
 }
