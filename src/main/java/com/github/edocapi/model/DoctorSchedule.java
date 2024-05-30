@@ -32,17 +32,25 @@ public class DoctorSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int appointmentsDurationInMins = 20;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Set<DayOfWeek> workingDays = new HashSet<>();
+    @ElementCollection
+    private Set<DayOfWeek> workingDays = Set.of(
+            DayOfWeek.MONDAY,
+            DayOfWeek.TUESDAY,
+            DayOfWeek.WEDNESDAY,
+            DayOfWeek.THURSDAY,
+            DayOfWeek.FRIDAY
+    );
     @ElementCollection
     private Set<LocalDate> dayOffs = new HashSet<>();
     @Column(nullable = false)
-    private LocalTime startTime;
+    private LocalTime startTime = LocalTime.of(8, 0, 0);
     @ElementCollection
     private Set<LocalTime> lunchHours = new HashSet<>();
     @Column(nullable = false)
-    private LocalTime endTime;
+    private LocalTime endTime = LocalTime.of(18, 0, 0);
     @Column(nullable = false)
     private boolean isDeleted = false;
 

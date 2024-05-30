@@ -1,15 +1,15 @@
 package com.github.edocapi.dto;
 
-import lombok.Data;
+import java.util.Set;
 
-@Data
-public class DoctorDto {
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String specialty;
-    private String background;
-    private Long scheduleId;
-    private int experience;
-    private double averageRating;
+public record DoctorDto(
+        Long id,
+        String firstName,
+        String lastName,
+        Set<SpecialtyDto> specialties,
+        String background,
+        Long scheduleId,
+        int experience,
+        double averageRating
+) {
 }

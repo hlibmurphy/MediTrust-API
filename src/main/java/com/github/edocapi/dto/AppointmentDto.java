@@ -1,4 +1,14 @@
 package com.github.edocapi.dto;
 
-public record AppointmentDto(Long id) {
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public record AppointmentDto(
+        Long id,
+        LocalTime time,
+        LocalDate date,
+        boolean isOnline,
+        Long doctorId,
+        Long userId
+) {
 }

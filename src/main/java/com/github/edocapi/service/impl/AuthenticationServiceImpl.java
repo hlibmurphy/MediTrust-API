@@ -3,7 +3,7 @@ package com.github.edocapi.service.impl;
 import com.github.edocapi.dto.UserLoginRequestDto;
 import com.github.edocapi.dto.UserLoginResponseDto;
 import com.github.edocapi.dto.UserRegisterRequestDto;
-import com.github.edocapi.dto.UserRegisterResponseDto;
+import com.github.edocapi.dto.UserResponseDto;
 import com.github.edocapi.exception.RegistrationException;
 import com.github.edocapi.mapper.UserMapper;
 import com.github.edocapi.model.Role;
@@ -12,6 +12,7 @@ import com.github.edocapi.repository.RoleRepository;
 import com.github.edocapi.repository.UserRepository;
 import com.github.edocapi.security.JwtUtil;
 import com.github.edocapi.service.AuthenticationService;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserRegisterResponseDto register(UserRegisterRequestDto registerRequestDto) {
+    public UserResponseDto register(UserRegisterRequestDto registerRequestDto) {
         registerRequestDto.setPhone(parsePhoneNumber(registerRequestDto.getPhone()));
 
         if (userRepository.findByPhone(registerRequestDto.getPhone()).isPresent()) {
@@ -56,7 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
 
         Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
-                () -> new RuntimeException("Cannot find a role " + Role.RoleName.ROLE_USER));
+                () -> new EntityNotFoundException("Cannot find a role " + Role.RoleName.ROLE_USER));
         userRole.setName(Role.RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
 

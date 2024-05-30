@@ -20,7 +20,7 @@ import lombok.ToString;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String text;
     private int rating;
 

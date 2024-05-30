@@ -5,7 +5,8 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class UserRegisterResponseDto {
+public class UserResponseDto {
+    private Long id;
     private String phone;
     private String email;
     private String firstName;

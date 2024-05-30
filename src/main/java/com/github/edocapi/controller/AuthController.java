@@ -3,7 +3,7 @@ package com.github.edocapi.controller;
 import com.github.edocapi.dto.UserLoginRequestDto;
 import com.github.edocapi.dto.UserLoginResponseDto;
 import com.github.edocapi.dto.UserRegisterRequestDto;
-import com.github.edocapi.dto.UserRegisterResponseDto;
+import com.github.edocapi.dto.UserResponseDto;
 import com.github.edocapi.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public UserRegisterResponseDto register(
+    public UserResponseDto register(
             @Validated @RequestBody UserRegisterRequestDto requestDto) {
         return authenticationService.register(requestDto);
     }

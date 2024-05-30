@@ -10,18 +10,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = SpecialtyMapper.class)
 public interface DoctorMapper {
     @Mapping(target = "scheduleId", source = "schedule.id")
     DoctorDto toDto(Doctor doctor);
 
     DoctorDtoWithoutScheduleId toDtoWithoutSchedule(Doctor doctor);
 
-    List<DoctorDtoWithoutScheduleId> toDtos(Page<Doctor> doctors);
+    List<DoctorDtoWithoutScheduleId> toDtosWithoutSchedule(Page<Doctor> doctors);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     @Mapping(target = "ratingSum", ignore = true)
     @Mapping(target = "averageRating", ignore = true)
+    @Mapping(target = "specialties", ignore = true)
     Doctor toModel(CreateDoctorRequestDto doctorRequestDto);
 }
