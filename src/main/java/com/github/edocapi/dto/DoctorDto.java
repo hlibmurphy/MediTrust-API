@@ -1,15 +1,22 @@
 package com.github.edocapi.dto;
 
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-public record DoctorDto(
-        Long id,
-        String firstName,
-        String lastName,
-        Set<SpecialtyDto> specialties,
-        String background,
-        Long scheduleId,
-        int experience,
-        double averageRating
-) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
+public class DoctorDto {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private Set<SpecialtyDto> specialties;
+    private String background;
+    private Long scheduleId;
+    private int experience;
+    private double averageRating;
 }

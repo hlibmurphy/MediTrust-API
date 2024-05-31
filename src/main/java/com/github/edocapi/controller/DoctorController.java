@@ -72,8 +72,8 @@ public class DoctorController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public DoctorDto saveDoctor(@Validated @RequestBody CreateDoctorRequestDto doctorRequestDto) {
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public DoctorDto createDoctor(@Validated @RequestBody CreateDoctorRequestDto doctorRequestDto) {
         return doctorService.save(doctorRequestDto);
     }
 

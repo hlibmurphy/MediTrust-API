@@ -133,10 +133,15 @@ public class DoctorServiceTest {
     }
 
     private DoctorDtoWithoutScheduleId mapToDtoWithoutSchedule(Doctor doctor) {
-        DoctorDtoWithoutScheduleId dto = new DoctorDtoWithoutScheduleId();
-        dto.setId(doctor.getId());
-        dto.setFirstName(doctor.getFirstName());
-        dto.setLastName(doctor.getLastName());
+        DoctorDtoWithoutScheduleId dto = new DoctorDtoWithoutScheduleId(
+                doctor.getId(),
+                doctor.getFirstName(),
+                doctor.getLastName(),
+                Set.of(createSpecialtyDto()),
+                doctor.getBackground(),
+                doctor.getExperience(),
+                doctor.getAverageRating()
+        );
 
         return dto;
     }

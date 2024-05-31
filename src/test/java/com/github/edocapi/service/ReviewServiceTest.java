@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.github.edocapi.dto.CreateReviewRequestDto;
 import com.github.edocapi.dto.DoctorDtoWithoutScheduleId;
 import com.github.edocapi.dto.ReviewDto;
+import com.github.edocapi.dto.SpecialtyDto;
 import com.github.edocapi.mapper.ReviewMapper;
 import com.github.edocapi.model.Doctor;
 import com.github.edocapi.model.Review;
@@ -21,6 +22,7 @@ import com.github.edocapi.service.impl.ReviewServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -134,9 +136,19 @@ public class ReviewServiceTest {
     }
 
     private ReviewDto mapToDto(Review review) {
-        DoctorDtoWithoutScheduleId doctorDto = new DoctorDtoWithoutScheduleId();
-        doctorDto.setId(1L);
-        doctorDto.setFirstName("Test Doctor");
+        DoctorDtoWithoutScheduleId doctorDto = new DoctorDtoWithoutScheduleId(
+                1L,
+                "First Name",
+                "Last Name",
+                Set.of(
+                        new SpecialtyDto(
+                        1L,
+                        "Specialty")
+                ),
+                "Background",
+                5,
+                5
+        );
         return new ReviewDto(review.getId(),
                 review.getText(),
                 review.getRating(),

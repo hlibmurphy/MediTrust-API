@@ -4,20 +4,26 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-public record CreateDoctorRequestDto(
+@Data
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
+public class CreateDoctorRequestDto{
         @NotBlank
-        String firstName,
+        private String firstName;
         @NotBlank
-        String lastName,
+        private String lastName;
         @NotBlank
         @Pattern(regexp = "^\\+?3?8?(0\\d{9})$")
-        String phone,
+        private String phone;
         @NotNull
-        Set<Long> specialtyIds,
-        String background,
+        private Set<Long> specialtyIds;
+        private String background;
         @NotNull
-        int experience
-) {
-
+        private int experience;
 }

@@ -6,6 +6,7 @@ import com.github.edocapi.service.ReviewService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ public class ReviewController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ReviewDto createReview(@RequestBody CreateReviewRequestDto reviewRequestDto) {
         return reviewService.save(reviewRequestDto);
     }

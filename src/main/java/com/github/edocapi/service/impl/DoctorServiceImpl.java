@@ -66,7 +66,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     private Doctor toModelWithSpecialty(CreateDoctorRequestDto doctorRequestDto) {
         Doctor doctor = doctorMapper.toModel(doctorRequestDto);
-        doctor.setSpecialties(doctorRequestDto.specialtyIds().stream()
+        doctor.setSpecialties(doctorRequestDto.getSpecialtyIds().stream()
                 .map(id -> specialtyRepository.findById(id)
                         .orElseThrow(
                                 () -> new EntityNotFoundException(
