@@ -1,6 +1,7 @@
 package com.github.edocapi.repository;
 
 import com.github.edocapi.model.Doctor;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +16,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Modifying
     @Query("UPDATE Doctor d "
             + "SET d.ratingSum = d.ratingSum + :newRating, "
-            + "d.averageRating = d.ratingSum / (:numberOfReviews + 1) "
+            + "d.averageRating = (d.ratingSum + :newRating) / (:numberOfReviews + 1) "
             + "WHERE d.id = :doctorId")
+    @Transactional
     void updateRating(@Param("doctorId") Long doctorId,
                       @Param("newRating") int newRating,
                       @Param("numberOfReviews") long numberOfReviews);

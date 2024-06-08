@@ -13,17 +13,17 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateDoctorRequestDto{
-        @NotBlank
-        private String firstName;
-        @NotBlank
-        private String lastName;
-        @NotBlank
-        @Pattern(regexp = "^\\+?3?8?(0\\d{9})$")
-        private String phone;
-        @NotNull
-        private Set<Long> specialtyIds;
-        private String background;
-        @NotNull
-        private int experience;
+public class CreateDoctorRequestDto {
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String lastName;
+    @NotBlank
+    @Pattern(regexp = "^\\+?3?8?(0\\d{9})$")
+    private String phone;
+    @NotNull
+    private Set<Long> specialtyIds;
+    private String background;
+    @NotNull
+    private int experience;
 }

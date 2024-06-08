@@ -5,16 +5,23 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-public record UpdateScheduleRequestDto(
-        int appointmentsDurationInMins,
-        @NotNull
-        Set<DayOfWeek> workingDays,
-        Set<LocalDate> dayOffs,
-        @NotNull
-        LocalTime startTime,
-        Set<LocalTime> lunchHours,
-        @NotNull
-        LocalTime endTime
-) {
+@Accessors(chain = true)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UpdateScheduleRequestDto {
+    private int appointmentsDurationInMins;
+    @NotNull
+    private Set<DayOfWeek> workingDays;
+    private Set<LocalDate> dayOffs;
+    @NotNull
+    private LocalTime startTime;
+    private Set<LocalTime> lunchHours;
+    @NotNull
+    private LocalTime endTime;
 }

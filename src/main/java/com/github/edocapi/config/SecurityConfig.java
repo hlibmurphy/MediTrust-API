@@ -38,11 +38,12 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers(HttpMethod.GET,
                                         "/doctors/**", "/appointments/**",
-                                        "/time-slots/**")
+                                        "/time-slots/**", "/specialties/**",
+                                        "/reviews/**")
                                 .permitAll()
                                 .requestMatchers("/auth/**", "/error",
                                         "/swagger-ui.html", "/v3/api-docs/**",
-                                        "/swagger-ui/**", "/webjars/**", "/doctors/**")
+                                        "/swagger-ui/**", "/webjars/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

@@ -72,6 +72,7 @@ public class DoctorScheduleServiceTest {
         Long scheduleId = 1L;
         UpdateScheduleRequestDto updateRequestDto = createUpdateScheduleRequestDto();
         DoctorSchedule schedule = mapToModel(updateRequestDto);
+        when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(createDoctor(schedule)));
         when(doctorScheduleMapper.toModel(any(UpdateScheduleRequestDto.class)))
                 .thenReturn(schedule);
         schedule.setId(scheduleId);
@@ -89,12 +90,12 @@ public class DoctorScheduleServiceTest {
 
     private DoctorSchedule mapToModel(UpdateScheduleRequestDto updateRequestDto) {
         DoctorSchedule schedule = new DoctorSchedule();
-        schedule.setStartTime(updateRequestDto.startTime());
-        schedule.setEndTime(updateRequestDto.endTime());
-        schedule.setWorkingDays(updateRequestDto.workingDays());
-        schedule.setLunchHours(updateRequestDto.lunchHours());
-        schedule.setAppointmentsDurationInMins(updateRequestDto.appointmentsDurationInMins());
-        schedule.setDayOffs(updateRequestDto.dayOffs());
+        schedule.setStartTime(updateRequestDto.getStartTime());
+        schedule.setEndTime(updateRequestDto.getEndTime());
+        schedule.setWorkingDays(updateRequestDto.getWorkingDays());
+        schedule.setLunchHours(updateRequestDto.getLunchHours());
+        schedule.setAppointmentsDurationInMins(updateRequestDto.getAppointmentsDurationInMins());
+        schedule.setDayOffs(updateRequestDto.getDayOffs());
         return schedule;
     }
 

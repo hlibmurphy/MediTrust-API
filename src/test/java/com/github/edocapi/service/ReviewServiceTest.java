@@ -83,7 +83,7 @@ public class ReviewServiceTest {
         assertEquals(expected, actual,
                 "The retrieved Review DTO should match expected one");
         verify(reviewMapper, times(1)).toModel(reviewRequestDto);
-        verify(doctorRepository, times(1)).findById(reviewRequestDto.doctorId());
+        verify(doctorRepository, times(1)).findById(reviewRequestDto.getDoctorId());
         verify(doctorRepository, times(1)).updateRating(anyLong(), anyInt(), anyLong());
         verify(reviewRepository, times(1)).save(review);
         verify(reviewMapper, times(1)).toDto(review);
@@ -98,7 +98,7 @@ public class ReviewServiceTest {
                 () -> reviewService.save(reviewRequestDto));
 
         verify(doctorRepository, times(1))
-                .findById(reviewRequestDto.doctorId());
+                .findById(reviewRequestDto.getDoctorId());
     }
 
     @Test

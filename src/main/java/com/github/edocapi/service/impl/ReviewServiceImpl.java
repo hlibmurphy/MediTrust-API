@@ -32,14 +32,14 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public ReviewDto save(CreateReviewRequestDto reviewRequestDto) {
         Review review = reviewMapper.toModel(reviewRequestDto);
-        Long doctorId = reviewRequestDto.doctorId();
+        Long doctorId = reviewRequestDto.getDoctorId();
         review.setDoctor(doctorRepository.findById(doctorId).orElseThrow(
                 () -> new EntityNotFoundException("Doctor with id " + doctorId + " not found"))
         );
 
         long numberOfReviews = doctorRepository.countReviewsByDoctorId(doctorId);
         doctorRepository.updateRating(doctorId,
-                reviewRequestDto.rating(),
+                reviewRequestDto.getRating(),
                 numberOfReviews);
 
         Review savedReview = reviewRepository.save(review);
