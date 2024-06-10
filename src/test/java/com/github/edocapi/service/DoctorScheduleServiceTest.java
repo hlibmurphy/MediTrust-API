@@ -13,12 +13,14 @@ import com.github.edocapi.dto.UpdateScheduleRequestDto;
 import com.github.edocapi.mapper.DoctorScheduleMapper;
 import com.github.edocapi.model.Doctor;
 import com.github.edocapi.model.DoctorSchedule;
+import com.github.edocapi.model.TimePeriod;
 import com.github.edocapi.repository.DoctorRepository;
 import com.github.edocapi.repository.DoctorScheduleRepository;
 import com.github.edocapi.service.impl.DoctorScheduleServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -90,8 +92,8 @@ public class DoctorScheduleServiceTest {
 
     private DoctorSchedule mapToModel(UpdateScheduleRequestDto updateRequestDto) {
         DoctorSchedule schedule = new DoctorSchedule();
-        schedule.setStartTime(updateRequestDto.getStartTime());
-        schedule.setEndTime(updateRequestDto.getEndTime());
+        schedule.getWorkingHours().setStartTime(updateRequestDto.getWorkingHours().getStartTime());
+        schedule.getWorkingHours().setEndTime(updateRequestDto.getWorkingHours().getEndTime());
         schedule.setWorkingDays(updateRequestDto.getWorkingDays());
         schedule.setLunchHours(updateRequestDto.getLunchHours());
         schedule.setAppointmentsDurationInMins(updateRequestDto.getAppointmentsDurationInMins());
@@ -111,9 +113,9 @@ public class DoctorScheduleServiceTest {
                         DayOfWeek.SATURDAY,
                         DayOfWeek.SUNDAY),
                 Set.of(),
-                LocalTime.of(8, 0, 0),
-                Set.of(),
-                LocalTime.of(16, 0, 0)
+                new TimePeriod(LocalTime.of(8, 0, 0),
+                        LocalTime.of(16, 0, 0)),
+                Set.of()
         );
     }
 
@@ -123,9 +125,9 @@ public class DoctorScheduleServiceTest {
                 schedule.getAppointmentsDurationInMins(),
                 schedule.getWorkingDays(),
                 schedule.getDayOffs(),
-                schedule.getStartTime(),
-                schedule.getLunchHours(),
-                schedule.getEndTime()
+                new TimePeriod(schedule.getWorkingHours().getStartTime(),
+                        schedule.getWorkingHours().getEndTime()),
+                Set.of()
         );
         return dto;
     }
@@ -141,9 +143,9 @@ public class DoctorScheduleServiceTest {
         DoctorSchedule schedule = new DoctorSchedule();
         LocalTime startTime = LocalTime.of(8, 0);
         LocalTime endTime = LocalTime.of(16, 0);
-        Set<LocalTime> lunchHours = Set.of(LocalTime.of(23, 0));
-        schedule.setStartTime(startTime);
-        schedule.setEndTime(endTime);
+        Set<TimePeriod> lunchHours = new HashSet<>();
+        schedule.getWorkingHours().setStartTime(startTime);
+        schedule.getWorkingHours().setEndTime(endTime);
         schedule.setLunchHours(lunchHours);
         schedule.setId(1L);
         schedule.setWorkingDays(Set.of(

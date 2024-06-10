@@ -21,7 +21,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentDto> findAppointmentsByDoctorIdAndDate(Long doctorId, LocalDate date) {
         List<Appointment> appointments =
                 appointmentRepository.findByDoctorIdAndDate(doctorId, date);
-        appointments.sort(Comparator.comparing(Appointment::getTime));
+        appointments.sort(Comparator.comparing(appointment -> appointment.getTimePeriod()
+                .getStartTime()));
         return appointmentMapper.toDtos(appointments);
     }
 }

@@ -1,8 +1,8 @@
 package com.github.edocapi.dto;
 
+import com.github.edocapi.model.TimePeriod;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +18,6 @@ public class DoctorScheduleDto {
     private int appointmentsDurationInMins;
     private Set<DayOfWeek> workingDays;
     private Set<LocalDate> dayOffs;
-    private LocalTime startTime;
-    private Set<LocalTime> lunchHours;
-    private LocalTime endTime;
+    private TimePeriod workingHours;
+    private Set<TimePeriod> lunchHours;
 }

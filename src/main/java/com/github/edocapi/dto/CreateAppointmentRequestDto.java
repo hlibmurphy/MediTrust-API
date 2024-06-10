@@ -7,7 +7,9 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 
 public record CreateAppointmentRequestDto(
         @NotNull
-        LocalTime time,
+        LocalTime startTime,
+        @NotNull
+        LocalTime endTime,
         @NotNull
         LocalDate date,
         @DefaultValue(value = "false")

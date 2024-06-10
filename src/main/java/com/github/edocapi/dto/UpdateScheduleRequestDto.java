@@ -1,9 +1,9 @@
 package com.github.edocapi.dto;
 
+import com.github.edocapi.model.TimePeriod;
 import jakarta.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +20,6 @@ public class UpdateScheduleRequestDto {
     private Set<DayOfWeek> workingDays;
     private Set<LocalDate> dayOffs;
     @NotNull
-    private LocalTime startTime;
-    private Set<LocalTime> lunchHours;
-    @NotNull
-    private LocalTime endTime;
+    private TimePeriod workingHours;
+    private Set<TimePeriod> lunchHours;
 }

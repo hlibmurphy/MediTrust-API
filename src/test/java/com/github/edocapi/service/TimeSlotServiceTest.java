@@ -12,6 +12,7 @@ import com.github.edocapi.model.Appointment;
 import com.github.edocapi.model.Doctor;
 import com.github.edocapi.model.DoctorSchedule;
 import com.github.edocapi.model.Specialty;
+import com.github.edocapi.model.TimePeriod;
 import com.github.edocapi.repository.AppointmentRepository;
 import com.github.edocapi.repository.DoctorRepository;
 import com.github.edocapi.service.impl.TimeSlotServiceImpl;
@@ -38,20 +39,26 @@ public class TimeSlotServiceTest {
     private TimeSlotServiceImpl timeSlotService;
 
     @Test
-    public void findAvailableSlots_withValidDoctorIdAndTodaysDate_shouldReturnAvailableSlots() {
-        Set<LocalTime> lunchHours = Set.of(LocalTime.of(10, 0, 0));
-        LocalTime startTime = LocalTime.of(8, 0);
-        LocalTime endTime = LocalTime.of(16, 0);
-        DoctorSchedule schedule = createSchedule(lunchHours, startTime, endTime, 60);
+    public void findAvailableSlots_withValidDoctorIdAndTodayDate_shouldReturnAvailableSlots() {
+        Set<TimePeriod> lunchHours = Set.of(new TimePeriod(
+                LocalTime.of(10, 0, 0),
+                LocalTime.of(11, 0, 0)));
+        LocalTime workStartTime = LocalTime.of(8, 0);
+        LocalTime workEndTime = LocalTime.of(16, 0);
+        DoctorSchedule schedule = createSchedule(lunchHours, workStartTime, workEndTime);
         Doctor doctor = createDoctor(schedule);
-        LocalTime appointmentTime = LocalTime.of(9, 0, 0);
+        LocalTime appointmentStartTime = LocalTime.of(9, 0, 0);
+        LocalTime appointmentEndTime = appointmentStartTime.plusMinutes(
+                schedule.getAppointmentsDurationInMins());
 
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
         when(appointmentRepository.findByDoctorIdAndDate(anyLong(), any(LocalDate.class)))
-                .thenReturn(List.of(createAppointment(doctor, LocalDate.now(), appointmentTime)));
+                .thenReturn(List.of(createAppointment(doctor, LocalDate.now(), appointmentStartTime,
+                        appointmentEndTime)));
 
         int expectedAvailableSlots = 6;
         Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now());
+        actual.forEach(System.out::println);
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());
         verify(appointmentRepository, times(1))
@@ -117,15 +124,14 @@ public class TimeSlotServiceTest {
         return schedule;
     }
 
-    private DoctorSchedule createSchedule(Set<LocalTime> lunchHours, LocalTime startTime,
-                                          LocalTime endTime,
-                                          int appointmentTime) {
+    private DoctorSchedule createSchedule(Set<TimePeriod> lunchHours, LocalTime startTime,
+                                          LocalTime endTime) {
         DoctorSchedule schedule = new DoctorSchedule();
-        schedule.setStartTime(startTime);
-        schedule.setEndTime(endTime);
+        schedule.getWorkingHours().setStartTime(startTime);
+        schedule.getWorkingHours().setEndTime(endTime);
         schedule.setLunchHours(lunchHours);
         schedule.setId(1L);
-        schedule.setAppointmentsDurationInMins(appointmentTime);
+        schedule.setAppointmentsDurationInMins(60);
         schedule.setWorkingDays(Set.of(
                 DayOfWeek.MONDAY,
                 DayOfWeek.TUESDAY,
@@ -139,11 +145,13 @@ public class TimeSlotServiceTest {
         return schedule;
     }
 
-    private Appointment createAppointment(Doctor doctor, LocalDate date, LocalTime time) {
+    private Appointment createAppointment(Doctor doctor, LocalDate date, LocalTime startTime,
+                                          LocalTime endTime) {
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setDate(date);
-        appointment.setTime(time);
+        appointment.getTimePeriod().setStartTime(startTime);
+        appointment.getTimePeriod().setEndTime(endTime);
 
         return appointment;
     }

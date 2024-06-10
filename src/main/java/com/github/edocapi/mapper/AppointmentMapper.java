@@ -12,6 +12,8 @@ import org.mapstruct.Mapping;
 public interface AppointmentMapper {
     @Mapping(target = "doctorId", source = "doctor.id")
     @Mapping(target = "userId", source = "patient.id")
+    @Mapping(target = "startTime", source = "timePeriod.startTime")
+    @Mapping(target = "endTime", source = "timePeriod.endTime")
     AppointmentDto toDto(Appointment appointment);
 
     List<AppointmentDto> toDtos(List<Appointment> appointments);

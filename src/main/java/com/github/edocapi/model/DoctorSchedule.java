@@ -2,6 +2,7 @@ package com.github.edocapi.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,6 +30,9 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction(value = "is_deleted = false")
 @Table(name = "doctor_schedules")
 public class DoctorSchedule {
+    @Transient
+    private static final int HOUR_IN_MINUTES = 60;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,17 +50,18 @@ public class DoctorSchedule {
     );
     @ElementCollection
     private Set<LocalDate> dayOffs = new HashSet<>();
-    @Column(nullable = false)
-    private LocalTime startTime = LocalTime.of(8, 0, 0);
     @ElementCollection
-    private Set<LocalTime> lunchHours = new HashSet<>();
+    private Set<TimePeriod> lunchHours = new HashSet<>();
     @Column(nullable = false)
-    private LocalTime endTime = LocalTime.of(18, 0, 0);
+    @Embedded
+    private TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 0, 0),
+            LocalTime.of(18, 0, 0));
     @Column(nullable = false)
     private boolean isDeleted = false;
 
     public int timeSlotsNumber() {
-        return (endTime.getHour() - startTime.getHour()) * (60 / appointmentsDurationInMins);
+        return (workingHours.getEndTime().getHour() - workingHours.getStartTime().getHour())
+                * (60 / appointmentsDurationInMins);
     }
 
     public boolean isWorkingDay(LocalDate date) {

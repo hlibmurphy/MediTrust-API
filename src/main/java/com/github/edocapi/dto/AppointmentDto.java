@@ -13,7 +13,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class AppointmentDto {
     private Long id;
-    private LocalTime time;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private LocalDate date;
     private boolean isOnline;
     private Long doctorId;

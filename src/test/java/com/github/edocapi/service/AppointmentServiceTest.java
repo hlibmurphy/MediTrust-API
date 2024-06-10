@@ -64,7 +64,8 @@ public class AppointmentServiceTest {
 
     private AppointmentDto mapToDto(Appointment appointment) {
         return new AppointmentDto(appointment.getId(),
-                appointment.getTime(),
+                appointment.getTimePeriod().getStartTime(),
+                appointment.getTimePeriod().getEndTime(),
                 appointment.getDate(),
                 appointment.isOnline(),
                 1L,
@@ -76,7 +77,7 @@ public class AppointmentServiceTest {
         appointment.setId(1L);
         appointment.setDoctor(doctor);
         appointment.setDate(LocalDate.now());
-        appointment.setTime(LocalTime.of(9, 0));
+        appointment.getTimePeriod().setStartTime(LocalTime.of(9, 0));
         appointment.setOnline(false);
         appointment.setPatient(new User());
         return appointment;

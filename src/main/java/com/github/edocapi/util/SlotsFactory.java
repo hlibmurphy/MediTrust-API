@@ -1,5 +1,6 @@
-package com.github.edocapi.model;
+package com.github.edocapi.util;
 
+import com.github.edocapi.model.DoctorSchedule;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,17 +10,13 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SlotsFactory {
-    private LocalTime time;
+    private LocalTime startTime;
     private int durationInMins;
     private int numberOfSlots;
 
-    public void update() {
-        time = time.plusMinutes(durationInMins);
-    }
-
     public static SlotsFactory of(DoctorSchedule schedule) {
         return new SlotsFactory(
-                schedule.getStartTime(),
+                schedule.getWorkingHours().getStartTime(),
                 schedule.getAppointmentsDurationInMins(),
                 schedule.timeSlotsNumber()
         );
@@ -27,11 +24,11 @@ public class SlotsFactory {
 
     public Set<Slot> create() {
         Set<Slot> slots = new HashSet<>();
-        for (int i = 0; i < getNumberOfSlots(); i++) {
-            slots.add(new Slot(time));
-            update();
+        LocalTime currentTime = startTime;
+        for (int i = 0; i < numberOfSlots; i++) {
+            slots.add(new Slot(currentTime));
+            currentTime = currentTime.plusMinutes(durationInMins);
         }
-
         return slots;
     }
 }

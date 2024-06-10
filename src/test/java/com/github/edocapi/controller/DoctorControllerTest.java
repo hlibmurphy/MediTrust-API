@@ -16,6 +16,7 @@ import com.github.edocapi.dto.DoctorScheduleDto;
 import com.github.edocapi.dto.ReviewDto;
 import com.github.edocapi.dto.SpecialtyDto;
 import com.github.edocapi.dto.UpdateScheduleRequestDto;
+import com.github.edocapi.model.TimePeriod;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -288,8 +289,8 @@ public class DoctorControllerTest {
 
     private UpdateScheduleRequestDto createUpdateScheduleRequestDto() {
         return new UpdateScheduleRequestDto()
-                .setStartTime(LocalTime.of(9, 0, 0))
-                .setEndTime(LocalTime.of(18, 0, 0))
+                .setWorkingHours(new TimePeriod(LocalTime.of(9, 0, 0),
+                        LocalTime.of(18, 0, 0)))
                 .setDayOffs(Set.of())
                 .setLunchHours(Set.of())
                 .setWorkingDays(Set.of(
@@ -311,8 +312,10 @@ public class DoctorControllerTest {
         doctorScheduleDto.setId(1L);
         doctorScheduleDto.setAppointmentsDurationInMins(
                 updateScheduleRequestDto.getAppointmentsDurationInMins());
-        doctorScheduleDto.setStartTime(updateScheduleRequestDto.getStartTime());
-        doctorScheduleDto.setEndTime(updateScheduleRequestDto.getEndTime());
+        TimePeriod timePeriod = new TimePeriod(updateScheduleRequestDto.getWorkingHours()
+                .getStartTime(), updateScheduleRequestDto.getWorkingHours()
+                .getEndTime());
+        doctorScheduleDto.setWorkingHours(timePeriod);
         doctorScheduleDto.setDayOffs(updateScheduleRequestDto.getDayOffs());
         doctorScheduleDto.setLunchHours(updateScheduleRequestDto.getLunchHours());
         doctorScheduleDto.setWorkingDays(updateScheduleRequestDto.getWorkingDays());
@@ -323,8 +326,9 @@ public class DoctorControllerTest {
         DoctorScheduleDto doctorScheduleDto = new DoctorScheduleDto();
         doctorScheduleDto.setId(1L);
         doctorScheduleDto.setAppointmentsDurationInMins(60);
-        doctorScheduleDto.setStartTime(LocalTime.of(8, 0, 0));
-        doctorScheduleDto.setEndTime(LocalTime.of(9, 0, 0));
+        TimePeriod timePeriod = new TimePeriod(LocalTime.of(8, 0, 0),
+                LocalTime.of(9, 0, 0));
+        doctorScheduleDto.setWorkingHours(timePeriod);
         doctorScheduleDto.setDayOffs(Set.of());
         doctorScheduleDto.setLunchHours(Set.of());
         doctorScheduleDto.setWorkingDays(Set.of(
@@ -346,7 +350,8 @@ public class DoctorControllerTest {
         appointmentDto.setDoctorId(1L);
         appointmentDto.setUserId(1L);
         appointmentDto.setOnline(false);
-        appointmentDto.setTime(LocalTime.of(9, 0, 0));
+        appointmentDto.setStartTime(LocalTime.of(9, 0, 0));
+        appointmentDto.setEndTime(LocalTime.of(10, 0, 0));
         appointmentDto.setDate(LocalDate.now());
         return appointmentDto;
     }
@@ -376,9 +381,6 @@ public class DoctorControllerTest {
     private DoctorDtoWithoutScheduleId createDoctorDtoWithoutScheduleId(
             CreateDoctorRequestDto requestDto,
             SpecialtyDto specialtyDto) {
-        DoctorScheduleDto doctorScheduleDto = new DoctorScheduleDto()
-                .setId(1L);
-
         return new DoctorDtoWithoutScheduleId()
                 .setId(1L)
                 .setFirstName(requestDto.getFirstName())
