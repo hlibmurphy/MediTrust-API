@@ -54,4 +54,13 @@ public class DoctorSchedule {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
+
+    public int timeSlotsNumber() {
+        return (endTime.getHour() - startTime.getHour()) * (60 / appointmentsDurationInMins);
+    }
+
+    public boolean isWorkingDay(LocalDate date) {
+        return workingDays.contains(date.getDayOfWeek())
+                && !dayOffs.contains(date);
+    }
 }
