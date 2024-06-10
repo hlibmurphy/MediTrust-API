@@ -54,7 +54,6 @@ public class DoctorSchedule {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-
     public int timeSlotsNumber() {
         return (endTime.getHour() - startTime.getHour()) * (60 / appointmentsDurationInMins);
     }

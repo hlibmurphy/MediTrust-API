@@ -60,6 +60,8 @@ public class SpecialtyControllerTest {
     @Test
     @DisplayName("Create a specialty")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:db/specialties/remove-dentist-from-specialties-table.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void createSpecialty_withCreateSpecialtyRequestDto_shouldCreateSpecialty()
             throws Exception {
         CreateSpecialtyRequestDto createSpecialtyRequestDto = createSpecialtyRequestDto();

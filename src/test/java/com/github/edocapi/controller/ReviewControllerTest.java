@@ -39,9 +39,17 @@ public class ReviewControllerTest {
 
     @Test
     @DisplayName("Get all reviews")
-    @Sql(scripts = "classpath:db/reviews/add-review-to-reviews-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/reviews/add-review-to-reviews-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/reviews/remove-review-from-reviews-table.sql",
+    @Sql(scripts = {
+            "classpath:db/reviews/remove-review-from-reviews-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAllReviews_withPageable_shouldReturnAllReviews() throws Exception {
         MvcResult result = mockMvc.perform(
@@ -59,11 +67,15 @@ public class ReviewControllerTest {
 
     @Test
     @DisplayName("Create a review")
-    @Sql(scripts = "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {
             "classpath:db/reviews/remove-review-from-reviews-table.sql",
-            "classpath:db/doctors/remove-doctor-from-doctors-table.sql"
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @WithMockUser(username = "user")

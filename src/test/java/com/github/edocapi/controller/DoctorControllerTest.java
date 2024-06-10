@@ -51,9 +51,15 @@ public class DoctorControllerTest {
 
     @Test
     @DisplayName("Get all doctors")
-    @Sql(scripts = "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAllDoctors_withPageable_ShouldReturnAllDoctors() throws Exception {
         MvcResult result = mockMvc.perform(
@@ -70,9 +76,17 @@ public class DoctorControllerTest {
 
     @Test
     @DisplayName("Get reviews by doctor's ID")
-    @Sql(scripts = "classpath:db/reviews/add-review-to-reviews-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/reviews/add-review-to-reviews-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/reviews/remove-review-from-reviews-table.sql",
+    @Sql(scripts = {
+            "classpath:db/reviews/remove-review-from-reviews-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getReviewsByDoctorId_withValidDoctorIdAndPageable_shouldReturnReviewsByDoctorId()
             throws Exception {
@@ -90,9 +104,15 @@ public class DoctorControllerTest {
 
     @Test
     @DisplayName("Get available time slots by doctor's ID")
-    @Sql(scripts = "classpath:db/doctor_schedules/add-schedule-to-doctor_schedules-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/doctor_schedules/remove-schedule-from-doctor_schedules-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAvailableTimeSlotsByDoctorId_withValidDoctorIdAndDate_shouldReturnSlots()
             throws Exception {
@@ -113,9 +133,15 @@ public class DoctorControllerTest {
     @Test
     @DisplayName("Get schedule by doctor's ID")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:db/doctor_schedules/add-schedule-to-doctor_schedules-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/doctor_schedules/remove-schedule-from-doctor_schedules-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getDoctorSchedule_withValidDoctorId_shouldReturnDoctorSchedule()
             throws Exception {
@@ -136,9 +162,19 @@ public class DoctorControllerTest {
     @Test
     @DisplayName("Get appointments by doctor's ID")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:db/appointments/add-appointment-to-appointments-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/users/add-user-to-users-table.sql",
+            "classpath:db/appointments/add-appointment-to-appointments-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/appointments/remove-appointment-from-appointments-table.sql",
+    @Sql(scripts = {
+            "classpath:db/appointments/remove-appointment-from-appointments-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/users/remove-user-from-users-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAppointmentsByDoctorId_withValidDoctorId_shouldReturnAppointmentsByDoctorId()
             throws Exception {
@@ -159,7 +195,11 @@ public class DoctorControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:db/specialties/add-dentist-to-specialties-table.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/specialties/remove-dentist-from-specialties-table.sql",
+    @Sql(scripts = {
+            "classpath:db/specialties/remove-dentist-from-specialties-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void createDoctor_withCreateDoctorRequestDto_shouldCreateDoctor() throws Exception {
         SpecialtyDto specialtyDto = createSpecialtyDto();
@@ -182,11 +222,17 @@ public class DoctorControllerTest {
     @Test
     @DisplayName("Update doctor by ID")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:db/doctors_specialties/"
-            + "add-doctor-and-specialty-to-doctors-specialties-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/doctors_specialties/add-specialty-to-doctors-specialties-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/doctors_specialties/"
-            + "remove-doctor-and-specialty-from-doctors-specialties-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctors_specialties/remove-specialty-from-doctors-specialties-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateDoctor_withUpdateDoctorRequestDto_shouldUpdateDoctor() throws Exception {
         SpecialtyDto specialtyDto = createSpecialtyDto();
@@ -212,9 +258,15 @@ public class DoctorControllerTest {
     @Test
     @DisplayName("Update schedule by doctor's ID")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:db/doctor_schedules/add-schedule-to-doctor_schedules-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/doctor_schedules/remove-schedule-from-doctor_schedules-table.sql",
+    @Sql(scripts = {
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateSchedule_withValidDoctorIdAndUpdateScheduleRequestDto_shouldUpdateSchedule()
             throws Exception {

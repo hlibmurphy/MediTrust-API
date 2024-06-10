@@ -42,7 +42,10 @@ public class AuthControllerTest {
     @DisplayName("Register user")
     @Sql(scripts = "classpath:db/roles/add-user-role-to-roles-table.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/roles/remove-user-role-from-roles-table.sql",
+    @Sql(scripts = {
+            "classpath:db/roles/remove-user-role-from-roles-table.sql",
+            "classpath:db/users/remove-user-from-users-table.sql"
+    },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void register_withUserRegisterRequestDto_shouldReturnAndRegisterUser() throws Exception {
         UserRegisterRequestDto userRegisterRequestDto = createUserRegisterRequestDto();
@@ -65,7 +68,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("Register user")
+    @DisplayName("Login into account")
     @Sql(scripts = {
             "classpath:db/roles/add-user-role-to-roles-table.sql",
             "classpath:db/users/add-user-to-users-table.sql"
