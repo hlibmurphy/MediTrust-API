@@ -2,13 +2,15 @@ package com.github.edocapi.service;
 
 import com.github.edocapi.dto.CreateReviewRequestDto;
 import com.github.edocapi.dto.ReviewDto;
+import com.github.edocapi.model.User;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 public interface ReviewService {
     List<ReviewDto> findAll(Pageable pageable);
 
-    ReviewDto save(CreateReviewRequestDto reviewRequestDto);
+    ReviewDto save(CreateReviewRequestDto reviewRequestDto, User user);
 
     List<ReviewDto> findByDoctorId(Long doctorId, Pageable pageable);
 }

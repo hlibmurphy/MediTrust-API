@@ -16,5 +16,6 @@ public interface ReviewMapper {
     List<ReviewDto> toDtos(Page<Review> reviews);
 
     @Mapping(target = "doctor", ignore = true)
+    @Mapping(target = "author", ignore = true)
     Review toModel(CreateReviewRequestDto createReviewRequestDto);
 }

@@ -16,6 +16,7 @@ import com.github.edocapi.dto.SpecialtyDto;
 import com.github.edocapi.mapper.ReviewMapper;
 import com.github.edocapi.model.Doctor;
 import com.github.edocapi.model.Review;
+import com.github.edocapi.model.User;
 import com.github.edocapi.repository.DoctorRepository;
 import com.github.edocapi.repository.ReviewRepository;
 import com.github.edocapi.service.impl.ReviewServiceImpl;
@@ -77,8 +78,9 @@ public class ReviewServiceTest {
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
         ReviewDto expected = mapToDto(review);
         when(reviewMapper.toDto(any(Review.class))).thenReturn(expected);
-
-        ReviewDto actual = reviewService.save(reviewRequestDto);
+        User user = new User();
+        user.setId(1L);
+        ReviewDto actual = reviewService.save(reviewRequestDto, user);
 
         assertEquals(expected, actual,
                 "The retrieved Review DTO should match expected one");
@@ -92,10 +94,13 @@ public class ReviewServiceTest {
     @Test
     public void save_withInvalidDoctorId_shouldThrowEntityNotFoundException() {
         CreateReviewRequestDto reviewRequestDto = createReviewRequestDto(1L);
+        Review review = createReview(reviewRequestDto.getDoctorId());
+        when(reviewMapper.toModel(any(CreateReviewRequestDto.class))).thenReturn(review);
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
-
+        User user = new User();
+        user.setId(1L);
         assertThrows(EntityNotFoundException.class,
-                () -> reviewService.save(reviewRequestDto));
+                () -> reviewService.save(reviewRequestDto, user));
 
         verify(doctorRepository, times(1))
                 .findById(reviewRequestDto.getDoctorId());

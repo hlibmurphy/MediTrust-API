@@ -26,4 +26,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Doctor doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private User author;
 }
