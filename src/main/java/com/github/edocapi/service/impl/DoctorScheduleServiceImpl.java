@@ -27,12 +27,12 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
     }
 
     @Override
-    public DoctorScheduleDto update(Long id, UpdateScheduleRequestDto scheduleRequestDto) {
-        doctorRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Failed to find doctor with id " + id));
-        
-        DoctorSchedule schedule = doctorScheduleMapper.toModel(scheduleRequestDto);
-        schedule.setId(id);
+    public DoctorScheduleDto update(Long doctorId, UpdateScheduleRequestDto scheduleRequestDto) {
+        DoctorSchedule schedule = doctorScheduleRepository.findById(doctorId).orElseThrow(
+                () -> new EntityNotFoundException("Failed to find schedule with id "
+                        + doctorId));
+
+        doctorScheduleMapper.updateToModel(scheduleRequestDto, schedule);
         DoctorSchedule savedSchedule = doctorScheduleRepository.save(schedule);
         return doctorScheduleMapper.toDto(savedSchedule);
     }

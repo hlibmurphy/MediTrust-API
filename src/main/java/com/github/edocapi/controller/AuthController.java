@@ -5,6 +5,7 @@ import com.github.edocapi.dto.UserLoginResponseDto;
 import com.github.edocapi.dto.UserRegisterRequestDto;
 import com.github.edocapi.dto.UserResponseDto;
 import com.github.edocapi.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto login(@Valid @RequestBody UserLoginRequestDto requestDto) {
         return authenticationService.login(requestDto);
     }
 }

@@ -74,10 +74,8 @@ public class DoctorScheduleServiceTest {
         Long scheduleId = 1L;
         UpdateScheduleRequestDto updateRequestDto = createUpdateScheduleRequestDto();
         DoctorSchedule schedule = mapToModel(updateRequestDto);
-        when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(createDoctor(schedule)));
-        when(doctorScheduleMapper.toModel(any(UpdateScheduleRequestDto.class)))
-                .thenReturn(schedule);
         schedule.setId(scheduleId);
+        when(doctorScheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
         when(doctorScheduleRepository.save(any(DoctorSchedule.class))).thenReturn(schedule);
         DoctorScheduleDto expected = mapToDto(schedule);
         when(doctorScheduleMapper.toDto(any(DoctorSchedule.class))).thenReturn(expected);
@@ -85,7 +83,6 @@ public class DoctorScheduleServiceTest {
         DoctorScheduleDto actual = doctorScheduleService.update(schedule.getId(), updateRequestDto);
         assertEquals(expected, actual,
                 "The retrieved doctor schedule DTO should be the same as the expected");
-        verify(doctorScheduleMapper, times(1)).toModel(any(UpdateScheduleRequestDto.class));
         verify(doctorScheduleRepository, times(1)).save(any(DoctorSchedule.class));
         verify(doctorScheduleMapper, times(1)).toDto(any(DoctorSchedule.class));
     }

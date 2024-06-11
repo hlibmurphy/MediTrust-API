@@ -70,7 +70,6 @@ public class ReviewServiceTest {
     @Test
     public void save_withCreateReviewRequestDto_shouldSaveReview() {
         Doctor doctor = createDoctor(1L);
-        CreateReviewRequestDto reviewRequestDto = createReviewRequestDto(doctor.getId());
         Review review = createReview(doctor.getId());
 
         when(reviewMapper.toModel(any(CreateReviewRequestDto.class))).thenReturn(review);
@@ -80,6 +79,8 @@ public class ReviewServiceTest {
         when(reviewMapper.toDto(any(Review.class))).thenReturn(expected);
         User user = new User();
         user.setId(1L);
+
+        CreateReviewRequestDto reviewRequestDto = createReviewRequestDto(doctor.getId());
         ReviewDto actual = reviewService.save(reviewRequestDto, user);
 
         assertEquals(expected, actual,

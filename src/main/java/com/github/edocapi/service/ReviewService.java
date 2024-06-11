@@ -5,7 +5,6 @@ import com.github.edocapi.dto.ReviewDto;
 import com.github.edocapi.model.User;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 
 public interface ReviewService {
     List<ReviewDto> findAll(Pageable pageable);

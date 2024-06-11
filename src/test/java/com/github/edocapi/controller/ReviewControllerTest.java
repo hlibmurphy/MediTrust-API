@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -68,6 +68,9 @@ public class ReviewControllerTest {
     @Test
     @DisplayName("Create a review")
     @Sql(scripts = {
+            "classpath:db/users/add-user-to-users-table.sql",
+            "classpath:db/roles/add-user-role-to-roles-table.sql",
+            "classpath:db/users_roles/add-user-and-role-to-users-roles-table.sql",
             "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
             "classpath:db/doctors/add-doctor-to-doctors-table.sql"
     },
@@ -75,10 +78,13 @@ public class ReviewControllerTest {
     @Sql(scripts = {
             "classpath:db/reviews/remove-review-from-reviews-table.sql",
             "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
-            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/users_roles/remove-user-and-role-from-users-roles-table.sql",
+            "classpath:db/users/remove-user-from-users-table.sql",
+            "classpath:db/roles/remove-user-role-from-roles-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @WithMockUser(username = "user")
+    @WithUserDetails("0123456789")
     public void createReview_withCreateReviewRequestDto_shouldCreateReview() throws Exception {
         CreateReviewRequestDto createReviewRequestDto = createReviewRequestDto();
         String jsonRequest = objectMapper.writeValueAsString(createReviewRequestDto);

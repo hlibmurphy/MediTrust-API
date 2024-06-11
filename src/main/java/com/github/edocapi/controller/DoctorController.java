@@ -12,6 +12,8 @@ import com.github.edocapi.service.DoctorScheduleService;
 import com.github.edocapi.service.DoctorService;
 import com.github.edocapi.service.ReviewService;
 import com.github.edocapi.service.impl.TimeSlotServiceImpl;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/doctors")
 @RequiredArgsConstructor
+@Validated
 public class DoctorController {
     private final DoctorService doctorService;
     private final ReviewService reviewService;
@@ -90,23 +93,24 @@ public class DoctorController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public DoctorDto createDoctor(@Validated @RequestBody CreateDoctorRequestDto doctorRequestDto) {
+    public DoctorDto createDoctor(@Valid @RequestBody CreateDoctorRequestDto doctorRequestDto) {
         return doctorService.save(doctorRequestDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public DoctorDtoWithoutScheduleId updateDoctor(@PathVariable Long id,
-                                                   @Validated @RequestBody
-                                                   CreateDoctorRequestDto doctorRequestDto) {
+    public DoctorDtoWithoutScheduleId updateDoctor(
+            @PathVariable @Positive Long id,
+            @Valid @RequestBody
+            CreateDoctorRequestDto doctorRequestDto) {
         return doctorService.update(id, doctorRequestDto);
     }
 
     @PutMapping("/{id}/schedule")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public DoctorScheduleDto updateSchedule(
-            @PathVariable Long id,
-            @Validated @RequestBody UpdateScheduleRequestDto scheduleRequestDto) {
+            @PathVariable @Positive Long id,
+            @Valid @RequestBody UpdateScheduleRequestDto scheduleRequestDto) {
         return doctorScheduleService.update(id, scheduleRequestDto);
     }
 }
