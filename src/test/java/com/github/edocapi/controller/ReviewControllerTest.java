@@ -69,7 +69,6 @@ public class ReviewControllerTest {
     @DisplayName("Create a review")
     @Sql(scripts = {
             "classpath:db/users/add-user-to-users-table.sql",
-            "classpath:db/roles/add-user-role-to-roles-table.sql",
             "classpath:db/users_roles/add-user-and-role-to-users-roles-table.sql",
             "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
             "classpath:db/doctors/add-doctor-to-doctors-table.sql"
@@ -80,11 +79,10 @@ public class ReviewControllerTest {
             "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
             "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
             "classpath:db/users_roles/remove-user-and-role-from-users-roles-table.sql",
-            "classpath:db/users/remove-user-from-users-table.sql",
-            "classpath:db/roles/remove-user-role-from-roles-table.sql"
+            "classpath:db/users/remove-user-from-users-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @WithUserDetails("0123456789")
+    @WithUserDetails("0111111111")
     public void createReview_withCreateReviewRequestDto_shouldCreateReview() throws Exception {
         CreateReviewRequestDto createReviewRequestDto = createReviewRequestDto();
         String jsonRequest = objectMapper.writeValueAsString(createReviewRequestDto);

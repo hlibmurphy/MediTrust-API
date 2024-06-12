@@ -24,5 +24,6 @@ public interface DoctorMapper {
     @Mapping(target = "ratingSum", ignore = true)
     @Mapping(target = "averageRating", ignore = true)
     @Mapping(target = "specialties", ignore = true)
+    @Mapping(target = "schedule", ignore = true)
     Doctor toModel(CreateDoctorRequestDto doctorRequestDto);
 }

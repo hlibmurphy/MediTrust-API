@@ -6,9 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edocapi.dto.AppointmentDto;
+import com.github.edocapi.dto.AvailableSlotsDto;
 import com.github.edocapi.dto.CreateDoctorRequestDto;
 import com.github.edocapi.dto.DoctorDto;
 import com.github.edocapi.dto.DoctorDtoWithoutScheduleId;
@@ -80,13 +80,15 @@ public class DoctorControllerTest {
     @Sql(scripts = {
             "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
             "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/users/add-user-to-users-table.sql",
             "classpath:db/reviews/add-review-to-reviews-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {
             "classpath:db/reviews/remove-review-from-reviews-table.sql",
             "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
-            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/users/remove-user-from-users-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getReviewsByDoctorId_withValidDoctorIdAndPageable_shouldReturnReviewsByDoctorId()
@@ -122,12 +124,11 @@ public class DoctorControllerTest {
                         get("/doctors/1/available-slots?date=" + date))
                 .andExpect(status().isOk())
                 .andReturn();
-        Set<LocalTime> expected = Set.of(LocalTime.of(8, 0, 0));
+        AvailableSlotsDto expected = new AvailableSlotsDto(60,
+                Set.of(LocalTime.of(8, 0, 0)));
 
-        Set<LocalTime> actual = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                new TypeReference<>() {
-                });
+        AvailableSlotsDto actual = objectMapper.readValue(
+                result.getResponse().getContentAsString(), AvailableSlotsDto.class);
         Assertions.assertEquals(expected, actual);
     }
 
@@ -162,7 +163,7 @@ public class DoctorControllerTest {
 
     @Test
     @DisplayName("Get appointments by doctor's ID")
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockUser(username = "admin_user", roles = {"ADMIN"})
     @Sql(scripts = {
             "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
             "classpath:db/doctors/add-doctor-to-doctors-table.sql",
@@ -194,11 +195,12 @@ public class DoctorControllerTest {
     @Test
     @DisplayName("Create a new doctor")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:db/specialties/add-dentist-to-specialties-table.sql",
+    @Sql(scripts = "classpath:db/specialties/add-specialty-to-specialties-table.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {
-            "classpath:db/specialties/remove-dentist-from-specialties-table.sql",
+            "classpath:db/doctors_specialties/remove-specialty-from-doctors-specialties-table.sql",
             "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/specialties/remove-specialty-from-specialties-table.sql",
             "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -226,13 +228,15 @@ public class DoctorControllerTest {
     @Sql(scripts = {
             "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
             "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/specialties/add-specialty-to-specialties-table.sql",
             "classpath:db/doctors_specialties/add-specialty-to-doctors-specialties-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {
             "classpath:db/doctors_specialties/remove-specialty-from-doctors-specialties-table.sql",
             "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
-            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql"
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/specialties/remove-specialty-from-specialties-table.sql"
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateDoctor_withUpdateDoctorRequestDto_shouldUpdateDoctor() throws Exception {
@@ -303,15 +307,15 @@ public class DoctorControllerTest {
                         DayOfWeek.SUNDAY
                         )
                 )
-                .setAppointmentsDurationInMins(60);
+                .setAppointmentDurationInMins(60);
     }
 
     private DoctorScheduleDto createDoctorScheduleDto(UpdateScheduleRequestDto
                                                               updateScheduleRequestDto) {
         DoctorScheduleDto doctorScheduleDto = new DoctorScheduleDto();
         doctorScheduleDto.setId(1L);
-        doctorScheduleDto.setAppointmentsDurationInMins(
-                updateScheduleRequestDto.getAppointmentsDurationInMins());
+        doctorScheduleDto.setAppointmentDurationInMins(
+                updateScheduleRequestDto.getAppointmentDurationInMins());
         TimePeriod timePeriod = new TimePeriod(updateScheduleRequestDto.getWorkingHours()
                 .getStartTime(), updateScheduleRequestDto.getWorkingHours()
                 .getEndTime());
@@ -325,7 +329,7 @@ public class DoctorControllerTest {
     private DoctorScheduleDto createDoctorScheduleDto() {
         DoctorScheduleDto doctorScheduleDto = new DoctorScheduleDto();
         doctorScheduleDto.setId(1L);
-        doctorScheduleDto.setAppointmentsDurationInMins(60);
+        doctorScheduleDto.setAppointmentDurationInMins(60);
         TimePeriod timePeriod = new TimePeriod(LocalTime.of(8, 0, 0),
                 LocalTime.of(9, 0, 0));
         doctorScheduleDto.setWorkingHours(timePeriod);
@@ -348,10 +352,10 @@ public class DoctorControllerTest {
         AppointmentDto appointmentDto = new AppointmentDto();
         appointmentDto.setId(1L);
         appointmentDto.setDoctorId(1L);
-        appointmentDto.setUserId(1L);
         appointmentDto.setOnline(false);
-        appointmentDto.setStartTime(LocalTime.of(9, 0, 0));
-        appointmentDto.setEndTime(LocalTime.of(10, 0, 0));
+        TimePeriod timePeriod = new TimePeriod(LocalTime.of(9, 0, 0),
+                LocalTime.of(10, 0, 0));
+        appointmentDto.setTimePeriod(timePeriod);
         appointmentDto.setDate(LocalDate.now());
         return appointmentDto;
     }
@@ -359,7 +363,7 @@ public class DoctorControllerTest {
     private SpecialtyDto createSpecialtyDto() {
         return new SpecialtyDto()
                 .setId(1L)
-                .setName("Dentist");
+                .setName("Test Specialty");
     }
 
     private DoctorDto createDoctorDto(CreateDoctorRequestDto requestDto,

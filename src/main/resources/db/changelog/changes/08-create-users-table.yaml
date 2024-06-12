@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-doctors-table
+      id: create-users-table
       author: hlib
       changes:
         - createTable:
-            tableName: doctors
+            tableName: users
             columns:
               - column:
                   name: id
@@ -14,39 +14,28 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: first_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: last_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
                   name: phone
                   type: varchar(13)
                   constraints:
                     nullable: false
               - column:
-                  name: background
-                  type: varchar(255)
-              - column:
-                  name: schedule_id
-                  type: bigint
-              - column:
-                  name: experience
-                  type: int
-              - column:
-                  name: rating_sum
-                  type: int
-                  defaultValueNumeric: 0
+                  name: first_name
+                  type: varchar(13)
                   constraints:
                     nullable: false
               - column:
-                  name: average_rating
-                  type: double
-                  defaultValueNumeric: 0.0
+                  name: last_name
+                  type: varchar(13)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -55,10 +44,3 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-
-        - addForeignKeyConstraint:
-            baseTableName: doctors
-            baseColumnNames: schedule_id
-            referencedTableName: doctor_schedules
-            referencedColumnNames: id
-            constraintName: fk_doctors_doctor_schedules_id

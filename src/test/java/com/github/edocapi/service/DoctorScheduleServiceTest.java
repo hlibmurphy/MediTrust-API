@@ -93,7 +93,7 @@ public class DoctorScheduleServiceTest {
         schedule.getWorkingHours().setEndTime(updateRequestDto.getWorkingHours().getEndTime());
         schedule.setWorkingDays(updateRequestDto.getWorkingDays());
         schedule.setLunchHours(updateRequestDto.getLunchHours());
-        schedule.setAppointmentsDurationInMins(updateRequestDto.getAppointmentsDurationInMins());
+        schedule.setAppointmentDurationInMins(updateRequestDto.getAppointmentDurationInMins());
         schedule.setDayOffs(updateRequestDto.getDayOffs());
         return schedule;
     }
@@ -119,7 +119,7 @@ public class DoctorScheduleServiceTest {
     private DoctorScheduleDto mapToDto(DoctorSchedule schedule) {
         DoctorScheduleDto dto = new DoctorScheduleDto(
                 schedule.getId(),
-                schedule.getAppointmentsDurationInMins(),
+                schedule.getAppointmentDurationInMins(),
                 schedule.getWorkingDays(),
                 schedule.getDayOffs(),
                 new TimePeriod(schedule.getWorkingHours().getStartTime(),

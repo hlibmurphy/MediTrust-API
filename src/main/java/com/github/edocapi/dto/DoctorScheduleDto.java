@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class DoctorScheduleDto {
     private Long id;
-    private int appointmentsDurationInMins;
+    private int appointmentDurationInMins;
     private Set<DayOfWeek> workingDays;
     private Set<LocalDate> dayOffs;
     private TimePeriod workingHours;

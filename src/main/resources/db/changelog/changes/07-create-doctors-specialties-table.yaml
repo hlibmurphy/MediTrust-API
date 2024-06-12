@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-doctors-specialties-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: doctors_specialties
+            columns:
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: specialty_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: doctors_specialties
+            baseColumnNames: doctor_id
+            referencedTableName: doctors
+            referencedColumnNames: id
+            constraintName: fk_doctors_specialties_doctors_id
+
+        - addForeignKeyConstraint:
+            baseTableName: doctors_specialties
+            baseColumnNames: specialty_id
+            referencedTableName: specialties
+            referencedColumnNames: id
+            constraintName: fk_doctors_specialties_specialties_id

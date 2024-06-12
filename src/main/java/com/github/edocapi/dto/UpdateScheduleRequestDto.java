@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateScheduleRequestDto {
-    private int appointmentsDurationInMins;
+    private int appointmentDurationInMins;
     @NotNull
     private Set<DayOfWeek> workingDays;
     private Set<LocalDate> dayOffs;

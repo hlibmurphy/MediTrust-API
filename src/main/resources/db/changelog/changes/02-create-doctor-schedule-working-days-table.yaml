@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-doctor-schedule-working-days-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: doctor_schedule_working_days
+            columns:
+              - column:
+                  name: doctor_schedule_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: working_days
+                  type: enum('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - addForeignKeyConstraint:
+            baseTableName: doctor_schedule_working_days
+            baseColumnNames: doctor_schedule_id
+            referencedTableName: doctor_schedules
+            referencedColumnNames: id
+            constraintName: fk_doctor_schedule_working_days_doctor_schedules_id

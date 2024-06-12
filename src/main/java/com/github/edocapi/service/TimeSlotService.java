@@ -1,9 +1,8 @@
 package com.github.edocapi.service;
 
+import com.github.edocapi.dto.AvailableSlotsDto;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Set;
 
 public interface TimeSlotService {
-    Set<LocalTime> findAvailableSlots(Long doctorId, LocalDate date);
+    AvailableSlotsDto findAvailableSlots(Long doctorId, LocalDate date);
 }

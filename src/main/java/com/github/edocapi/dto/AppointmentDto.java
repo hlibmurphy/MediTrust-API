@@ -1,7 +1,7 @@
 package com.github.edocapi.dto;
 
+import com.github.edocapi.model.TimePeriod;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +13,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class AppointmentDto {
     private Long id;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private TimePeriod timePeriod;
     private LocalDate date;
     private boolean isOnline;
     private Long doctorId;
-    private Long userId;
 }

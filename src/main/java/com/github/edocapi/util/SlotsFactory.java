@@ -17,7 +17,7 @@ public class SlotsFactory {
     public static SlotsFactory of(DoctorSchedule schedule) {
         return new SlotsFactory(
                 schedule.getWorkingHours().getStartTime(),
-                schedule.getAppointmentsDurationInMins(),
+                schedule.getAppointmentDurationInMins(),
                 schedule.timeSlotsNumber()
         );
     }

@@ -39,9 +39,9 @@ public class SpecialtyControllerTest {
 
     @Test
     @DisplayName("Get all specialties")
-    @Sql(scripts = "classpath:db/specialties/add-dentist-to-specialties-table.sql",
+    @Sql(scripts = "classpath:db/specialties/add-specialty-to-specialties-table.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:db/specialties/remove-dentist-from-specialties-table.sql",
+    @Sql(scripts = "classpath:db/specialties/remove-specialty-from-specialties-table.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAllSpecialties_withNoArgs_shouldReturnAllSpecialties() throws Exception {
         MvcResult result = mockMvc.perform(
@@ -60,7 +60,7 @@ public class SpecialtyControllerTest {
     @Test
     @DisplayName("Create a specialty")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:db/specialties/remove-dentist-from-specialties-table.sql",
+    @Sql(scripts = "classpath:db/specialties/remove-specialty-from-specialties-table.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void createSpecialty_withCreateSpecialtyRequestDto_shouldCreateSpecialty()
             throws Exception {
@@ -83,7 +83,7 @@ public class SpecialtyControllerTest {
 
     private CreateSpecialtyRequestDto createSpecialtyRequestDto() {
         CreateSpecialtyRequestDto createSpecialtyRequestDto = new CreateSpecialtyRequestDto();
-        createSpecialtyRequestDto.setName("Dentist");
+        createSpecialtyRequestDto.setName("Test Specialty");
         return createSpecialtyRequestDto;
     }
 
@@ -96,6 +96,6 @@ public class SpecialtyControllerTest {
     private SpecialtyDto createSpecialtyDto() {
         return new SpecialtyDto()
                 .setId(1L)
-                .setName("Dentist");
+                .setName("Test Specialty");
     }
 }

@@ -36,7 +36,7 @@ public class DoctorSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int appointmentsDurationInMins = 20;
+    private int appointmentDurationInMins = 20;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -49,6 +49,7 @@ public class DoctorSchedule {
             DayOfWeek.FRIDAY
     );
     @ElementCollection
+    @Column(name = "day_off")
     private Set<LocalDate> dayOffs = new HashSet<>();
     @ElementCollection
     private Set<TimePeriod> lunchHours = new HashSet<>();
@@ -61,7 +62,7 @@ public class DoctorSchedule {
 
     public int timeSlotsNumber() {
         return (workingHours.getEndTime().getHour() - workingHours.getStartTime().getHour())
-                * (60 / appointmentsDurationInMins);
+                * (60 / appointmentDurationInMins);
     }
 
     public boolean isWorkingDay(LocalDate date) {

@@ -49,7 +49,7 @@ public class TimeSlotServiceTest {
         Doctor doctor = createDoctor(schedule);
         LocalTime appointmentStartTime = LocalTime.of(9, 0, 0);
         LocalTime appointmentEndTime = appointmentStartTime.plusMinutes(
-                schedule.getAppointmentsDurationInMins());
+                schedule.getAppointmentDurationInMins());
 
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
         when(appointmentRepository.findByDoctorIdAndDate(anyLong(), any(LocalDate.class)))
@@ -57,7 +57,8 @@ public class TimeSlotServiceTest {
                         appointmentEndTime)));
 
         int expectedAvailableSlots = 6;
-        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now());
+        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now())
+                .getAvailableTimes();
         actual.forEach(System.out::println);
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());
@@ -81,7 +82,8 @@ public class TimeSlotServiceTest {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
 
         int expectedAvailableSlots = 0;
-        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now());
+        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now())
+                .getAvailableTimes();
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());
     }
@@ -94,7 +96,8 @@ public class TimeSlotServiceTest {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
 
         int expectedAvailableSlots = 0;
-        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now());
+        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now())
+                .getAvailableTimes();
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());
 
@@ -131,7 +134,7 @@ public class TimeSlotServiceTest {
         schedule.getWorkingHours().setEndTime(endTime);
         schedule.setLunchHours(lunchHours);
         schedule.setId(1L);
-        schedule.setAppointmentsDurationInMins(60);
+        schedule.setAppointmentDurationInMins(60);
         schedule.setWorkingDays(Set.of(
                 DayOfWeek.MONDAY,
                 DayOfWeek.TUESDAY,

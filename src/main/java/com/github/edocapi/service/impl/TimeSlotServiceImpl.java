@@ -1,5 +1,6 @@
 package com.github.edocapi.service.impl;
 
+import com.github.edocapi.dto.AvailableSlotsDto;
 import com.github.edocapi.model.Appointment;
 import com.github.edocapi.model.Doctor;
 import com.github.edocapi.model.DoctorSchedule;
@@ -26,14 +27,14 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     private final DoctorRepository doctorRepository;
 
     @Override
-    public Set<LocalTime> findAvailableSlots(Long doctorId, LocalDate date) {
+    public AvailableSlotsDto findAvailableSlots(Long doctorId, LocalDate date) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
                 () -> new EntityNotFoundException("Failed to find doctor with id " + doctorId)
         );
-
         DoctorSchedule schedule = doctor.getSchedule();
+
         if (!schedule.isWorkingDay(date)) {
-            return Set.of();
+            return new AvailableSlotsDto(schedule.getAppointmentDurationInMins(), Set.of());
         }
 
         List<TimePeriod> periods = new ArrayList<>();
@@ -41,10 +42,11 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 .map(Appointment::getTimePeriod)
                 .toList());
         periods.addAll(schedule.getLunchHours());
-        return SlotsFactory.of(schedule).create().stream()
+        Set<LocalTime> availableSlots = SlotsFactory.of(schedule).create().stream()
                 .filter(slot -> slot.isAvailable(periods))
                 .map(Slot::getTime)
                 .collect(Collectors.toSet());
+        return new AvailableSlotsDto(schedule.getAppointmentDurationInMins(), availableSlots);
     }
 
     private List<Appointment> getAppointments(Long doctorId, LocalDate date) {

@@ -40,12 +40,7 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Register user")
-    @Sql(scripts = "classpath:db/roles/add-user-role-to-roles-table.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {
-            "classpath:db/roles/remove-user-role-from-roles-table.sql",
-            "classpath:db/users/remove-user-from-users-table.sql"
-    },
+    @Sql(scripts = "classpath:db/users/remove-user-from-users-table.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void register_withUserRegisterRequestDto_shouldReturnAndRegisterUser() throws Exception {
         UserRegisterRequestDto userRegisterRequestDto = createUserRegisterRequestDto();
@@ -69,15 +64,9 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Login into account")
-    @Sql(scripts = {
-            "classpath:db/roles/add-user-role-to-roles-table.sql",
-            "classpath:db/users/add-user-to-users-table.sql"
-    },
+    @Sql(scripts = "classpath:db/users/add-user-to-users-table.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {
-            "classpath:db/roles/remove-user-role-from-roles-table.sql",
-            "classpath:db/users/remove-user-from-users-table.sql"
-    },
+    @Sql(scripts = "classpath:db/users/remove-user-from-users-table.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void login_withUserLoginRequestDto_shouldReturnToken() throws Exception {
         UserLoginRequestDto userLoginRequestDto = createUserLoginRequestDto();
@@ -99,7 +88,7 @@ public class AuthControllerTest {
 
     private UserLoginRequestDto createUserLoginRequestDto() {
         UserLoginRequestDto userLoginRequestDto = new UserLoginRequestDto();
-        userLoginRequestDto.setPhone("0123456789");
+        userLoginRequestDto.setPhone("0111111111");
         userLoginRequestDto.setPassword("12345678");
         return userLoginRequestDto;
     }
@@ -116,8 +105,8 @@ public class AuthControllerTest {
 
     private UserRegisterRequestDto createUserRegisterRequestDto() {
         UserRegisterRequestDto userRegisterRequestDto = new UserRegisterRequestDto();
-        userRegisterRequestDto.setPhone("0123456789");
-        userRegisterRequestDto.setEmail("test@test.com");
+        userRegisterRequestDto.setPhone("0211111111");
+        userRegisterRequestDto.setEmail("test_email@test.com");
         userRegisterRequestDto.setFirstName("First Name");
         userRegisterRequestDto.setLastName("Last Name");
         userRegisterRequestDto.setPassword("password");

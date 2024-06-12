@@ -11,14 +11,13 @@ import org.mapstruct.Mapping;
 @Mapper(config = MapperConfig.class)
 public interface AppointmentMapper {
     @Mapping(target = "doctorId", source = "doctor.id")
-    @Mapping(target = "userId", source = "patient.id")
-    @Mapping(target = "startTime", source = "timePeriod.startTime")
-    @Mapping(target = "endTime", source = "timePeriod.endTime")
     AppointmentDto toDto(Appointment appointment);
 
     List<AppointmentDto> toDtos(List<Appointment> appointments);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "doctor", ignore = true)
-    @Mapping(target = "patient", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "timePeriod", ignore = true)
     Appointment toModel(CreateAppointmentRequestDto appointmentRequestDto);
 }

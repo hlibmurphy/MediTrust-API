@@ -1,4 +1,4 @@
-insert into doctor_schedules (id, appointments_duration_in_mins, end_time, is_deleted, start_time)
+insert into doctor_schedules (id, appointment_duration_in_mins, end_time, is_deleted, start_time)
 values (1, 60, '09:00:00', false, '08:00:00');
 insert into doctor_schedule_working_days (doctor_schedule_id, working_days)
 values (1, 'MONDAY');

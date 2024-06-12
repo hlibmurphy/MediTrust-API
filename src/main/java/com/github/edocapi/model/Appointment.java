@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
@@ -28,14 +29,19 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Embedded
+    @Column(nullable = false)
     private TimePeriod timePeriod = new TimePeriod();
+    @Column(nullable = false)
     private LocalDate date;
+    @Column(nullable = false)
     private boolean isOnline = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private User patient;
+    @JoinColumn(nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private Doctor doctor;
 
     @Column(nullable = false)
