@@ -49,6 +49,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .contains(createAppointmentRequestDto.getStartTime())) {
             throw new AppointmentException("Time slot "
                     + createAppointmentRequestDto.getStartTime()
+                    + " for date "
+                    + createAppointmentRequestDto.getDate()
                     + " is not available");
         }
 
@@ -58,6 +60,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 createAppointmentRequestDto.getStartTime()
                         .plusMinutes(availableSlots.getAppointmentDuration())));
         appointment.setUser(user);
+        appointment.setDoctor(doctorRepository.findById(doctorId).get());
         Appointment savedAppointment = appointmentRepository.save(appointment);
         return appointmentMapper.toDto(savedAppointment);
     }

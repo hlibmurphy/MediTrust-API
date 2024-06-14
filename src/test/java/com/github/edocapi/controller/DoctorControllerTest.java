@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edocapi.dto.AppointmentDto;
 import com.github.edocapi.dto.AvailableSlotsDto;
+import com.github.edocapi.dto.CreateAppointmentRequestDto;
 import com.github.edocapi.dto.CreateDoctorRequestDto;
 import com.github.edocapi.dto.DoctorDto;
 import com.github.edocapi.dto.DoctorDtoWithoutScheduleId;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -180,12 +182,13 @@ public class DoctorControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAppointmentsByDoctorId_withValidDoctorId_shouldReturnAppointmentsByDoctorId()
             throws Exception {
-        String date = LocalDate.now().toString();
+        String date = LocalDate.now().plusDays(1).toString();
         MvcResult result = mockMvc.perform(
                         get("/doctors/1/appointments?date=" + date))
                 .andExpect(status().isOk())
                 .andReturn();
-        AppointmentDto[] expected = {createAppointmentDto()};
+        AppointmentDto[] expected = {createAppointmentDto(LocalTime.of(9, 0, 0),
+                LocalTime.of(10, 0, 0))};
 
         AppointmentDto[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), AppointmentDto[].class);
@@ -291,6 +294,49 @@ public class DoctorControllerTest {
                 "The retrieved schedule DTO should match the updated one");
     }
 
+    @Test
+    @DisplayName("Create appointment")
+    @Sql(scripts = {
+            "classpath:db/users/add-user-to-users-table.sql",
+            "classpath:db/users_roles/add-user-and-role-to-users-roles-table.sql",
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql"
+    },
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/users_roles/remove-user-and-role-from-users-roles-table.sql",
+            "classpath:db/users/remove-user-from-users-table.sql"
+    },
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @WithUserDetails("0111111111")
+    public void createAppointment_withDoctorIdAndDtoAndAuthentication_shouldCreateAppointment()
+            throws Exception {
+        CreateAppointmentRequestDto createAppointmentRequestDto = createAppointmentRequestDto();
+        String jsonRequest = objectMapper.writeValueAsString(createAppointmentRequestDto);
+        MvcResult result = mockMvc.perform(
+                        post("/doctors/1/appointment")
+                                .content(jsonRequest)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+        AppointmentDto expected = createAppointmentDto(LocalTime.of(8, 0, 0),
+                LocalTime.of(9, 0, 0));
+        AppointmentDto actual = objectMapper.readValue(result.getResponse().getContentAsString(),
+                AppointmentDto.class);
+        Assertions.assertEquals(expected, actual);
+    }
+
+    private CreateAppointmentRequestDto createAppointmentRequestDto() {
+        CreateAppointmentRequestDto requestDto = new CreateAppointmentRequestDto();
+        requestDto.setDate(LocalDate.now().plusDays(1));
+        requestDto.setStartTime(LocalTime.of(8, 0, 0));
+        requestDto.setOnline(false);
+        return requestDto;
+    }
+
     private UpdateScheduleRequestDto createUpdateScheduleRequestDto() {
         return new UpdateScheduleRequestDto()
                 .setWorkingHours(new TimePeriod(LocalTime.of(9, 0, 0),
@@ -348,15 +394,15 @@ public class DoctorControllerTest {
         return doctorScheduleDto;
     }
 
-    private AppointmentDto createAppointmentDto() {
+    private AppointmentDto createAppointmentDto(LocalTime startTime, LocalTime endTime) {
         AppointmentDto appointmentDto = new AppointmentDto();
         appointmentDto.setId(1L);
         appointmentDto.setDoctorId(1L);
         appointmentDto.setOnline(false);
-        TimePeriod timePeriod = new TimePeriod(LocalTime.of(9, 0, 0),
-                LocalTime.of(10, 0, 0));
+        TimePeriod timePeriod = new TimePeriod(startTime,
+                endTime);
         appointmentDto.setTimePeriod(timePeriod);
-        appointmentDto.setDate(LocalDate.now());
+        appointmentDto.setDate(LocalDate.now().plusDays(1));
         return appointmentDto;
     }
 

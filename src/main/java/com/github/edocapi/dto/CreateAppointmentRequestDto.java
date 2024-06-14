@@ -13,6 +13,4 @@ public class CreateAppointmentRequestDto {
     private LocalDate date;
     @NotNull
     private boolean isOnline;
-    @NotNull
-    private Long doctorId;
 }

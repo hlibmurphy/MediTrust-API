@@ -101,11 +101,12 @@ public class DoctorController {
 
     @PostMapping("/{id}/appointment")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @ResponseStatus(HttpStatus.CREATED)
     public AppointmentDto createAppointment(
             @PathVariable Long id,
             Authentication authentication,
             @Valid @RequestBody CreateAppointmentRequestDto createAppointmentRequestDto) {
-        User user = (User) authentication.getCredentials();
+        User user = (User) authentication.getPrincipal();
         return appointmentService.save(id, user, createAppointmentRequestDto);
     }
 
