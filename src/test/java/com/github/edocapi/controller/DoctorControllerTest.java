@@ -326,7 +326,8 @@ public class DoctorControllerTest {
                 LocalTime.of(9, 0, 0));
         AppointmentDto actual = objectMapper.readValue(result.getResponse().getContentAsString(),
                 AppointmentDto.class);
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual,
+                "The saved appointment should be same as expected");
     }
 
     private CreateAppointmentRequestDto createAppointmentRequestDto() {
