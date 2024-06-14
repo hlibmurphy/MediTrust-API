@@ -13,6 +13,7 @@ import com.github.edocapi.model.Specialty;
 import com.github.edocapi.repository.SpecialtyRepository;
 import com.github.edocapi.service.impl.SpecialtyServiceImpl;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,7 @@ public class SpecialtyServiceTest {
     private SpecialtyServiceImpl specialtyService;
 
     @Test
+    @DisplayName("Find all specialties")
     public void findAll_withNoArgs_shouldReturnAllSpecialties() {
         List<Specialty> specialties = List.of(createSpecialty());
 
@@ -49,6 +51,7 @@ public class SpecialtyServiceTest {
     }
 
     @Test
+    @DisplayName("Save a new specialty")
     public void save_withCreateSpecialtyRequestDto_shouldSaveSpecialty() {
         CreateSpecialtyRequestDto specialtyRequestDto = createSpecialtyRequestDto();
         Specialty specialty = createSpecialty();

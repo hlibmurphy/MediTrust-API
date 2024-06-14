@@ -40,6 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class AppointmentServiceTest {
+    private static final LocalDate TOMORROW_DATE = LocalDate.now().plusDays(1);
     @Mock
     private AppointmentRepository appointmentRepository;
 
@@ -56,6 +57,7 @@ public class AppointmentServiceTest {
     private AppointmentServiceImpl appointmentService;
 
     @Test
+    @DisplayName("Find appointment")
     public void findAppointmentsByDoctorIdAndDate_withDoctorIdAndDate_returnsAppointments() {
         Doctor doctor = createDoctor();
         List<Appointment> appointments = new ArrayList<>();
@@ -72,7 +74,7 @@ public class AppointmentServiceTest {
 
         List<AppointmentDto> actual =
                 appointmentService.findAppointmentsByDoctorIdAndDate(doctor.getId(),
-                        LocalDate.now());
+                        TOMORROW_DATE);
         assertEquals(expected, actual,
                 "The retrieved appointment list should be same as expected");
         verify(appointmentRepository, times(1))
@@ -154,7 +156,7 @@ public class AppointmentServiceTest {
         CreateAppointmentRequestDto requestDto = new CreateAppointmentRequestDto();
         requestDto.setStartTime(startTime);
         requestDto.setOnline(false);
-        requestDto.setDate(LocalDate.now().plusDays(1));
+        requestDto.setDate(TOMORROW_DATE);
 
         return requestDto;
     }
@@ -181,7 +183,7 @@ public class AppointmentServiceTest {
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setDoctor(doctor);
-        appointment.setDate(LocalDate.now());
+        appointment.setDate(TOMORROW_DATE);
         TimePeriod timePeriod = new TimePeriod(startTime, endTime);
         appointment.setTimePeriod(timePeriod);
         appointment.setOnline(false);

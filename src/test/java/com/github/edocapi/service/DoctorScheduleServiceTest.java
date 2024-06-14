@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,6 +45,7 @@ public class DoctorScheduleServiceTest {
     private DoctorScheduleServiceImpl doctorScheduleService;
 
     @Test
+    @DisplayName("Find schedule")
     public void findByDoctorId_withValidDoctorId_returnsDoctorSchedule() {
         DoctorSchedule schedule = createSchedule();
         Doctor doctor = createDoctor(schedule);
@@ -61,6 +63,7 @@ public class DoctorScheduleServiceTest {
     }
 
     @Test
+    @DisplayName("Find schedule by doctor's ID with invalid ID")
     public void findByDoctorId_withInvalidDoctorId_returnsDoctorSchedule() {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -70,6 +73,7 @@ public class DoctorScheduleServiceTest {
     }
 
     @Test
+    @DisplayName("Update schedule")
     public void update_withValidIdAndUpdateScheduleRequestDto_shouldUpdateDoctorSchedule() {
         Long scheduleId = 1L;
         UpdateScheduleRequestDto updateRequestDto = createUpdateScheduleRequestDto();

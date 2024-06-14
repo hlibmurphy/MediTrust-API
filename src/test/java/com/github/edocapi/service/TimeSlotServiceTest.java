@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class TimeSlotServiceTest {
+    private static final LocalDate TOMORROW_DATE = LocalDate.now().plusDays(1);
     @Mock
     private DoctorRepository doctorRepository;
     @Mock
@@ -39,7 +41,8 @@ public class TimeSlotServiceTest {
     private TimeSlotServiceImpl timeSlotService;
 
     @Test
-    public void findAvailableSlots_withValidDoctorIdAndTodayDate_shouldReturnAvailableSlots() {
+    @DisplayName("Find available slots")
+    public void findAvailableSlots_withValidDoctorIdAndTomorrowDate_shouldReturnAvailableSlots() {
         Set<TimePeriod> lunchHours = Set.of(new TimePeriod(
                 LocalTime.of(10, 0, 0),
                 LocalTime.of(11, 0, 0)));
@@ -53,13 +56,12 @@ public class TimeSlotServiceTest {
 
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
         when(appointmentRepository.findByDoctorIdAndDate(anyLong(), any(LocalDate.class)))
-                .thenReturn(List.of(createAppointment(doctor, LocalDate.now(), appointmentStartTime,
+                .thenReturn(List.of(createAppointment(doctor, TOMORROW_DATE, appointmentStartTime,
                         appointmentEndTime)));
 
         int expectedAvailableSlots = 6;
-        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now())
+        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), TOMORROW_DATE)
                 .getAvailableTimes();
-        actual.forEach(System.out::println);
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());
         verify(appointmentRepository, times(1))
@@ -67,28 +69,31 @@ public class TimeSlotServiceTest {
     }
 
     @Test
+    @DisplayName("Find available slots with invalid doctor's ID")
     public void findAvailableSlots_withInvalidDoctorId_shouldThrowException() {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class,
-                () -> timeSlotService.findAvailableSlots(1L, LocalDate.now()));
+                () -> timeSlotService.findAvailableSlots(1L, TOMORROW_DATE));
     }
 
     @Test
+    @DisplayName("Find available slots on a day off")
     public void findAvailableSlots_onDayOff_shouldReturnEmptySet() {
-        DoctorSchedule schedule = createScheduleWithDayOffs(Set.of(LocalDate.now()));
+        DoctorSchedule schedule = createScheduleWithDayOffs(Set.of(TOMORROW_DATE));
         Doctor doctor = createDoctor(schedule);
 
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
 
         int expectedAvailableSlots = 0;
-        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now())
+        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), TOMORROW_DATE)
                 .getAvailableTimes();
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());
     }
 
     @Test
+    @DisplayName("Find slots on a non-working day")
     public void findAvailableSlots_onNonWorkingDay_shouldReturnEmptySet() {
         DoctorSchedule schedule = createScheduleWithEmptyWorkingDays();
         Doctor doctor = createDoctor(schedule);
@@ -96,7 +101,7 @@ public class TimeSlotServiceTest {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
 
         int expectedAvailableSlots = 0;
-        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), LocalDate.now())
+        Set<LocalTime> actual = timeSlotService.findAvailableSlots(doctor.getId(), TOMORROW_DATE)
                 .getAvailableTimes();
         assertEquals(expectedAvailableSlots, actual.size());
         verify(doctorRepository, times(1)).findById(anyLong());

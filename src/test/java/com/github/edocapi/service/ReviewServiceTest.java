@@ -24,6 +24,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,6 +50,7 @@ public class ReviewServiceTest {
     private ReviewServiceImpl reviewService;
 
     @Test
+    @DisplayName("Find all reviews")
     public void findAll_withPageable_shouldReturnAllReviews() {
         List<Review> reviews = List.of(createReview(1L));
         Page<Review> pagedReviews = new PageImpl<>(reviews);
@@ -68,6 +70,7 @@ public class ReviewServiceTest {
     }
 
     @Test
+    @DisplayName("Save a review")
     public void save_withCreateReviewRequestDto_shouldSaveReview() {
         Doctor doctor = createDoctor(1L);
         Review review = createReview(doctor.getId());
@@ -93,6 +96,7 @@ public class ReviewServiceTest {
     }
 
     @Test
+    @DisplayName("Save a review with invalid doctor ID")
     public void save_withInvalidDoctorId_shouldThrowEntityNotFoundException() {
         CreateReviewRequestDto reviewRequestDto = createReviewRequestDto(1L);
         Review review = createReview(reviewRequestDto.getDoctorId());
@@ -108,6 +112,7 @@ public class ReviewServiceTest {
     }
 
     @Test
+    @DisplayName("Find reviews by doctor's ID")
     public void findByDoctorId_withPageable_shouldReturnReviewsForDoctor() {
         List<Review> reviews = List.of(createReview(1L));
         Page<Review> pagedReviews = new PageImpl<>(reviews);

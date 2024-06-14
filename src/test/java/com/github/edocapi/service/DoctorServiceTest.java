@@ -23,6 +23,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,6 +49,7 @@ public class DoctorServiceTest {
     private DoctorServiceImpl doctorService;
 
     @Test
+    @DisplayName("Find all doctors")
     public void findAll_withPageable_shouldReturnAllDoctors() {
         List<Doctor> doctors = List.of(createDoctor());
         Page<Doctor> pagedDoctors = new PageImpl<>(doctors);
@@ -65,6 +67,7 @@ public class DoctorServiceTest {
     }
 
     @Test
+    @DisplayName("Find doctor by ID")
     public void findById_withValidId_shouldReturnDoctor() {
         Doctor doctor = createDoctor();
         DoctorDtoWithoutScheduleId expected = mapToDtoWithoutSchedule(doctor);
@@ -80,6 +83,7 @@ public class DoctorServiceTest {
     }
 
     @Test
+    @DisplayName("Find doctor by invalid ID")
     public void findById_withInvalidId_shouldThrowException() {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -89,6 +93,7 @@ public class DoctorServiceTest {
     }
 
     @Test
+    @DisplayName("Save doctor")
     public void save_withDoctor_shouldSaveDoctor() {
         CreateDoctorRequestDto doctorRequestDto = createDoctorRequestDto();
         Doctor doctor = createDoctor();
@@ -110,6 +115,7 @@ public class DoctorServiceTest {
     }
 
     @Test
+    @DisplayName("Update doctor")
     public void update_withDoctor_shouldUpdateDoctor() {
         Long doctorId = 1L;
         CreateDoctorRequestDto doctorRequestDto = createDoctorRequestDto();

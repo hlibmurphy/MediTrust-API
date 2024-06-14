@@ -20,6 +20,7 @@ import com.github.edocapi.service.impl.AuthenticationServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,6 +55,7 @@ public class AuthenticationServiceTest {
     private AuthenticationServiceImpl authenticationService;
 
     @Test
+    @DisplayName("Register new user")
     public void register_withUserRegisterRequestDto_shouldRegisterUserAndReturnUserResponseDto() {
         UserRegisterRequestDto userRegisterRequestDto = createTestUserRegisterDto();
         User user = mapToModel(1L, userRegisterRequestDto);
@@ -76,6 +78,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Register with invalid email")
     public void register_withInvalidEmail_shouldThrowException() {
         UserRegisterRequestDto userRegisterRequestDto = createTestUserRegisterDto();
         User user = mapToModel(1L, userRegisterRequestDto);
@@ -87,6 +90,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Register with invalid role name")
     public void register_withInvalidRoleName_shouldThrowException() {
         UserRegisterRequestDto userRegisterRequestDto = createTestUserRegisterDto();
         User user = mapToModel(1L, userRegisterRequestDto);
@@ -102,6 +106,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Login")
     public void login_withUserLoginRequestDto_shouldLoginAndReturnUserLoginResponseDto() {
         UserLoginRequestDto loginDto = createTestUserLoginDto();
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginDto.getPhone(),
