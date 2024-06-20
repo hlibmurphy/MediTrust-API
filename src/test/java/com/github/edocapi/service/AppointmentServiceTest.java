@@ -57,13 +57,30 @@ public class AppointmentServiceTest {
     private AppointmentServiceImpl appointmentService;
 
     @Test
-    @DisplayName("Find appointment")
+    public void get_withUserId_shouldReturnAppointments() {
+        User user = createUser();
+        Doctor doctor = createDoctor();
+        List<Appointment> appointments = List.of(createAppointment(user, doctor,
+                LocalTime.of(8, 0, 0),
+                LocalTime.of(9, 0, 0)));
+        List<AppointmentDto> expected = appointments.stream().map(this::mapToDto).toList();
+        when(appointmentRepository.findAppointmentsByUserId(anyLong())).thenReturn(appointments);
+        when(appointmentMapper.toDtos(appointments)).thenReturn(expected);
+        List<AppointmentDto> actual = appointmentService.get(user.getId());
+        Assertions.assertEquals(expected, actual,
+                "Should return the expected appointments");
+    }
+
+    @Test
+    @DisplayName("Find appointment by doc ID and date")
     public void findAppointmentsByDoctorIdAndDate_withDoctorIdAndDate_returnsAppointments() {
         Doctor doctor = createDoctor();
         List<Appointment> appointments = new ArrayList<>();
-        appointments.add(createAppointment(doctor, LocalTime.of(8, 0, 0),
+        appointments.add(createAppointment(new User(), doctor,
+                LocalTime.of(8, 0, 0),
                 LocalTime.of(9, 0, 0)));
-        appointments.add(createAppointment(doctor, LocalTime.of(9, 0, 0),
+        appointments.add(createAppointment(new User(), doctor,
+                LocalTime.of(9, 0, 0),
                 LocalTime.of(10, 0, 0)));
         when(appointmentRepository.findByDoctorIdAndDate(anyLong(), any(LocalDate.class)))
                 .thenReturn(appointments);
@@ -90,7 +107,8 @@ public class AppointmentServiceTest {
         when(timeSlotService.findAvailableSlots(anyLong(), any(LocalDate.class)))
                 .thenReturn(availableSlotsDto);
         Doctor doctor = createDoctor();
-        Appointment appointment = createAppointment(doctor, LocalTime.of(9, 0, 0),
+        Appointment appointment = createAppointment(new User(), doctor,
+                LocalTime.of(9, 0, 0),
                 LocalTime.of(10, 0, 0));
         when(appointmentMapper.toModel(any(CreateAppointmentRequestDto.class)))
                 .thenReturn(appointment);
@@ -175,11 +193,13 @@ public class AppointmentServiceTest {
                 appointment.getTimePeriod(),
                 appointment.getDate(),
                 appointment.isOnline(),
-                1L
+                1L,
+               Appointment.Status.SCHEDULED
         );
     }
 
-    private Appointment createAppointment(Doctor doctor, LocalTime startTime, LocalTime endTime) {
+    private Appointment createAppointment(User user, Doctor doctor, LocalTime startTime,
+                                          LocalTime endTime) {
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setDoctor(doctor);
@@ -187,7 +207,7 @@ public class AppointmentServiceTest {
         TimePeriod timePeriod = new TimePeriod(startTime, endTime);
         appointment.setTimePeriod(timePeriod);
         appointment.setOnline(false);
-        appointment.setUser(new User());
+        appointment.setUser(user);
         return appointment;
     }
 

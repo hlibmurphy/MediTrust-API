@@ -29,6 +29,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status
+                  type: enum('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'CANCELED')
+                  defaultValue: 'SCHEDULED'
+                  constraints:
+                    nullable: false
+              - column:
                   name: is_online
                   type: bit
                   constraints:

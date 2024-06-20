@@ -64,4 +64,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment savedAppointment = appointmentRepository.save(appointment);
         return appointmentMapper.toDto(savedAppointment);
     }
+
+    @Override
+    public List<AppointmentDto> get(Long userId) {
+        List<Appointment> appointments = appointmentRepository
+                .findAppointmentsByUserId(userId);
+        return appointmentMapper.toDtos(appointments);
+    }
 }

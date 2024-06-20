@@ -11,4 +11,6 @@ public interface AppointmentService {
 
     AppointmentDto save(Long doctorId, User user,
                         CreateAppointmentRequestDto createAppointmentRequestDto);
+
+    List<AppointmentDto> get(Long id);
 }

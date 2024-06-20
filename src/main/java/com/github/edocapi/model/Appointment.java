@@ -3,6 +3,8 @@ package com.github.edocapi.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +36,9 @@ public class Appointment {
     @Column(nullable = false)
     private LocalDate date;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.SCHEDULED;
+    @Column(nullable = false)
     private boolean isOnline = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -46,4 +51,11 @@ public class Appointment {
 
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    public enum Status {
+        SCHEDULED,
+        COMPLETED,
+        IN_PROGRESS,
+        CANCELED
+    }
 }

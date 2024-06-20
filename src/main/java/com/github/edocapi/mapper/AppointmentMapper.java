@@ -19,5 +19,6 @@ public interface AppointmentMapper {
     @Mapping(target = "doctor", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "timePeriod", ignore = true)
+    @Mapping(target = "status", ignore = true)
     Appointment toModel(CreateAppointmentRequestDto appointmentRequestDto);
 }

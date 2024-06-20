@@ -17,6 +17,7 @@ import com.github.edocapi.dto.DoctorScheduleDto;
 import com.github.edocapi.dto.ReviewDto;
 import com.github.edocapi.dto.SpecialtyDto;
 import com.github.edocapi.dto.UpdateScheduleRequestDto;
+import com.github.edocapi.model.Appointment;
 import com.github.edocapi.model.TimePeriod;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -304,6 +305,7 @@ public class DoctorControllerTest {
     },
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {
+            "classpath:db/appointments/remove-appointment-from-appointments-table.sql",
             "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
             "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
             "classpath:db/users_roles/remove-user-and-role-from-users-roles-table.sql",
@@ -398,6 +400,7 @@ public class DoctorControllerTest {
     private AppointmentDto createAppointmentDto(LocalTime startTime, LocalTime endTime) {
         AppointmentDto appointmentDto = new AppointmentDto();
         appointmentDto.setId(1L);
+        appointmentDto.setStatus(Appointment.Status.SCHEDULED);
         appointmentDto.setDoctorId(1L);
         appointmentDto.setOnline(false);
         TimePeriod timePeriod = new TimePeriod(startTime,
