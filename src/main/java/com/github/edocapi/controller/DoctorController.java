@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,19 +48,18 @@ public class DoctorController {
     private final AppointmentService appointmentService;
 
     @GetMapping
-    public List<DoctorDtoWithoutScheduleId> getAllDoctors(
-            @PageableDefault(page = 0, size = 10)
-            Pageable pageable) {
+    public List<DoctorDtoWithoutScheduleId> getAllDoctors(Pageable pageable) {
         return doctorService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
-    public DoctorDtoWithoutScheduleId getDoctorById(@PathVariable Long id) {
+    public DoctorDtoWithoutScheduleId getDoctorById(@PathVariable @Positive Long id) {
         return doctorService.findById(id);
     }
 
     @GetMapping("/{id}/reviews")
-    public List<ReviewDto> getReviewsByDoctorId(@PathVariable Long id, Pageable pageable) {
+    public List<ReviewDto> getReviewsByDoctorId(@PathVariable @Positive Long id,
+                                                Pageable pageable) {
         return reviewService.findByDoctorId(id, pageable);
     }
 
@@ -78,7 +76,7 @@ public class DoctorController {
     @GetMapping("/{id}/appointments")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AppointmentDto> getAppointmentsByDoctorId(
-            @PathVariable Long id,
+            @PathVariable @Positive Long id,
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate date
@@ -88,7 +86,7 @@ public class DoctorController {
 
     @GetMapping("/{id}/schedule")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public DoctorScheduleDto getDoctorSchedule(@PathVariable Long id) {
+    public DoctorScheduleDto getDoctorSchedule(@PathVariable @Positive Long id) {
         return doctorScheduleService.findByDoctorId(id);
     }
 
@@ -103,7 +101,7 @@ public class DoctorController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public AppointmentDto createAppointment(
-            @PathVariable Long id,
+            @PathVariable @Positive Long id,
             Authentication authentication,
             @Valid @RequestBody CreateAppointmentRequestDto createAppointmentRequestDto) {
         User user = (User) authentication.getPrincipal();

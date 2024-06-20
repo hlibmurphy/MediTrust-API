@@ -2,6 +2,8 @@ package com.github.edocapi.repository;
 
 import com.github.edocapi.model.Doctor;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +24,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     void updateRating(@Param("doctorId") Long doctorId,
                       @Param("newRating") int newRating,
                       @Param("numberOfReviews") long numberOfReviews);
+
+    @Query("SELECT d FROM Doctor d JOIN d.specialties s WHERE s.id = :id AND d.isDeleted = false")
+    Page<Doctor> findDoctorsBySpecialtyId(@Param("id") Long id, Pageable pageable);
 }

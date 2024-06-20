@@ -4,6 +4,7 @@ import com.github.edocapi.dto.CreateReviewRequestDto;
 import com.github.edocapi.dto.ReviewDto;
 import com.github.edocapi.model.User;
 import com.github.edocapi.service.ReviewService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,7 @@ public class ReviewController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReviewDto createReview(@RequestBody CreateReviewRequestDto reviewRequestDto,
+    public ReviewDto createReview(@Valid @RequestBody CreateReviewRequestDto reviewRequestDto,
                                   Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return reviewService.save(reviewRequestDto, user);

@@ -75,6 +75,7 @@ public class TimeSlotServiceTest {
 
         assertThrows(EntityNotFoundException.class,
                 () -> timeSlotService.findAvailableSlots(1L, TOMORROW_DATE));
+        verify(doctorRepository, times(1)).findById(anyLong());
     }
 
     @Test

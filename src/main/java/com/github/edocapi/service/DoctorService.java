@@ -14,4 +14,6 @@ public interface DoctorService {
     DoctorDto save(CreateDoctorRequestDto doctorRequestDto);
 
     DoctorDtoWithoutScheduleId update(Long doctorId, CreateDoctorRequestDto doctorRequestDto);
+
+    List<DoctorDto> getDoctorsBySpecialtyId(Long specialtyId, Pageable pageable);
 }

@@ -64,6 +64,13 @@ public class DoctorServiceImpl implements DoctorService {
         return doctorMapper.toDtoWithoutSchedule(savedDoctor);
     }
 
+    @Override
+    public List<DoctorDto> getDoctorsBySpecialtyId(Long specialtyId, Pageable pageable) {
+        Page<Doctor> doctorsPage = doctorRepository.findDoctorsBySpecialtyId(specialtyId, pageable);
+        List<Doctor> doctors = doctorsPage.getContent();
+        return doctorMapper.toDtos(doctors);
+    }
+
     private Doctor toModelWithSpecialty(CreateDoctorRequestDto doctorRequestDto) {
         Doctor doctor = doctorMapper.toModel(doctorRequestDto);
         doctor.setSpecialties(doctorRequestDto.getSpecialtyIds().stream()

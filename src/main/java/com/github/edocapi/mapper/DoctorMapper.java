@@ -26,4 +26,6 @@ public interface DoctorMapper {
     @Mapping(target = "specialties", ignore = true)
     @Mapping(target = "schedule", ignore = true)
     Doctor toModel(CreateDoctorRequestDto doctorRequestDto);
+
+    List<DoctorDto> toDtos(List<Doctor> doctors);
 }

@@ -20,9 +20,11 @@ import com.github.edocapi.repository.DoctorRepository;
 import com.github.edocapi.repository.SpecialtyRepository;
 import com.github.edocapi.service.impl.DoctorServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +37,6 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class DoctorServiceTest {
-
     @Mock
     private DoctorRepository doctorRepository;
 
@@ -136,6 +137,23 @@ public class DoctorServiceTest {
         verify(doctorRepository, times(1)).save(doctor);
         verify(doctorMapper, times(1)).toModel(doctorRequestDto);
         verify(doctorMapper, times(1)).toDtoWithoutSchedule(doctor);
+    }
+
+    @Test
+    @DisplayName("Get doctors by specialty")
+    public void getDoctorsBySpecialtyId_withValidSpecialtyId_shouldReturnDoctors() {
+        List<Doctor> doctors = new ArrayList<>();
+        doctors.add(createDoctor());
+        doctors.add(createDoctor());
+
+        when(doctorRepository.findDoctorsBySpecialtyId(anyLong(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(doctors));
+        List<DoctorDto> expected = doctors.stream()
+                .map(this::mapToDto)
+                .toList();
+        when(doctorMapper.toDtos(doctors)).thenReturn(expected);
+        List<DoctorDto> actual = doctorService.getDoctorsBySpecialtyId(1L, Pageable.unpaged());
+        Assertions.assertEquals(expected, actual, "The retrieved DTOs should match");
     }
 
     private DoctorDtoWithoutScheduleId mapToDtoWithoutSchedule(Doctor doctor) {

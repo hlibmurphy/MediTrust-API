@@ -7,7 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edocapi.dto.CreateSpecialtyRequestDto;
+import com.github.edocapi.dto.DoctorDto;
 import com.github.edocapi.dto.SpecialtyDto;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -79,6 +81,50 @@ public class SpecialtyControllerTest {
                 result.getResponse().getContentAsString(), SpecialtyDto.class);
         Assertions.assertEquals(expected, actual,
                 "The retrieved DTOs must match the expected ones.");
+    }
+
+    @Test
+    @Sql(scripts = {
+            "classpath:db/specialties/add-specialty-to-specialties-table.sql",
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/doctors_specialties/add-specialty-to-doctors-specialties-table.sql"
+    },
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {
+            "classpath:db/doctors_specialties/remove-specialty-from-doctors-specialties-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/specialties/remove-specialty-from-specialties-table.sql"
+    },
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void getDoctorsBySpecialtyId_withValidSpecialtyId_shouldReturnDoctorsBySpecialtyId()
+            throws Exception {
+        MvcResult result = mockMvc.perform(
+                        get("/specialties/1/doctors")
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        DoctorDto[] expected = {createDoctorDto()};
+        DoctorDto[] actual =
+                objectMapper.readValue(result.getResponse().getContentAsString(),
+                        DoctorDto[].class);
+        Assertions.assertEquals(expected[0], actual[0]);
+    }
+
+    private DoctorDto createDoctorDto() {
+        DoctorDto doctorDto = new DoctorDto();
+        doctorDto.setId(1L);
+        doctorDto.setFirstName("John");
+        doctorDto.setLastName("Doe");
+        doctorDto.setAverageRating(0);
+        SpecialtyDto specialtyDto = new SpecialtyDto();
+        specialtyDto.setId(1L);
+        specialtyDto.setName("Test Specialty");
+        doctorDto.setSpecialties(Set.of(specialtyDto));
+        doctorDto.setExperience(5);
+        doctorDto.setScheduleId(1L);
+        return doctorDto;
     }
 
     private CreateSpecialtyRequestDto createSpecialtyRequestDto() {
