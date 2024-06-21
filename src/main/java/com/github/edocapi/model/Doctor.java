@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -39,6 +40,11 @@ public class Doctor {
     private String firstName;
     private String lastName;
     private String phone;
+    private String background;
+    private BigDecimal price;
+    private String about;
+    private String serviceOffered;
+    private int experience;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "doctors_specialties",
@@ -46,8 +52,6 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(name = "specialty_id")
     )
     private Set<Specialty> specialties = new HashSet<>();
-    private String background;
-    private int experience;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
     @Column(nullable = false)

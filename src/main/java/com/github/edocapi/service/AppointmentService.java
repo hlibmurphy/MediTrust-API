@@ -2,6 +2,7 @@ package com.github.edocapi.service;
 
 import com.github.edocapi.dto.AppointmentDto;
 import com.github.edocapi.dto.CreateAppointmentRequestDto;
+import com.github.edocapi.dto.UpdateAppointmentStatusDto;
 import com.github.edocapi.model.User;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,4 +14,7 @@ public interface AppointmentService {
                         CreateAppointmentRequestDto createAppointmentRequestDto);
 
     List<AppointmentDto> get(Long id);
+
+    AppointmentDto updateStatus(Long id, Long userId,
+                                UpdateAppointmentStatusDto updateAppointmentStatusDto);
 }

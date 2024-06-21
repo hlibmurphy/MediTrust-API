@@ -20,6 +20,7 @@ import com.github.edocapi.repository.DoctorRepository;
 import com.github.edocapi.repository.SpecialtyRepository;
 import com.github.edocapi.service.impl.DoctorServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -193,8 +194,11 @@ public class DoctorServiceTest {
                 doctor.getId(),
                 doctor.getFirstName(),
                 doctor.getLastName(),
+                doctor.getPrice(),
                 Set.of(createSpecialtyDto()),
                 doctor.getBackground(),
+                doctor.getAbout(),
+                doctor.getServiceOffered(),
                 doctor.getSchedule().getId(),
                 doctor.getExperience(),
                 doctor.getAverageRating()
@@ -210,9 +214,13 @@ public class DoctorServiceTest {
                 "First Name",
                 "Last Name",
                 "0535638593",
+                BigDecimal.valueOf(1000),
                 Set.of(1L),
+                5,
                 "background",
-                5);
+                "About",
+                "Service Offered"
+        );
     }
 
 }

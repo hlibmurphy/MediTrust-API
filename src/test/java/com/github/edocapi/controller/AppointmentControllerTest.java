@@ -2,10 +2,12 @@ package com.github.edocapi.controller;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edocapi.dto.AppointmentDto;
+import com.github.edocapi.dto.UpdateAppointmentStatusDto;
 import com.github.edocapi.model.Appointment;
 import com.github.edocapi.model.Doctor;
 import com.github.edocapi.model.TimePeriod;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -76,6 +79,42 @@ public class AppointmentControllerTest {
 
         Assertions.assertEquals(expected[0], actual[0],
                 "The retrieved DTO should match the expected one");
+    }
+
+    @Test
+    @DisplayName("Get user's appointments")
+    @Sql(scripts = {
+            "classpath:db/users/add-user-with-id-500-to-users-table.sql",
+            "classpath:db/users_roles/add-specific-user-and-role-to-users-roles-table.sql",
+            "classpath:db/doctor_schedules/add-schedule-to-doctor-schedules-table.sql",
+            "classpath:db/doctors/add-doctor-to-doctors-table.sql",
+            "classpath:db/appointments/add-appointment-with-specific-user-to-appointments-table.sql"
+    }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {
+            "classpath:db/appointments/"
+                    + "remove-appointment-with-specific-user-from-appointments-table.sql",
+            "classpath:db/doctors/remove-doctor-from-doctors-table.sql",
+            "classpath:db/doctor_schedules/remove-schedule-from-doctor-schedules-table.sql",
+            "classpath:db/users_roles/remove-specific-user-and-role-from-users-roles-table.sql",
+            "classpath:db/users/remove-user-with-id-500-from-users-table.sql"
+    }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @WithUserDetails("0222222222")
+    public void updateAppointmentStatus_withAuthAndIdAndUpdateDto_shouldUpdateAppointment()
+            throws Exception {
+        UpdateAppointmentStatusDto updateAppointmentStatusDto = new UpdateAppointmentStatusDto()
+                .setStatus(Appointment.Status.CANCELED);
+        String jsonRequest = objectMapper.writeValueAsString(updateAppointmentStatusDto);
+        MvcResult result = mockMvc.perform(
+                        patch("/appointments/1")
+                                .content(jsonRequest)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        AppointmentDto actual = objectMapper.readValue(
+                result.getResponse().getContentAsString(), AppointmentDto.class);
+        Assertions.assertEquals(Appointment.Status.CANCELED, actual.getStatus(),
+                "The retrieved DTO's status should match the expected one");
     }
 
     private Doctor createDoctor() {

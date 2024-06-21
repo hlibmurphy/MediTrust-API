@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.edocapi.dto.CreateSpecialtyRequestDto;
 import com.github.edocapi.dto.DoctorDto;
 import com.github.edocapi.dto.SpecialtyDto;
+import java.math.BigDecimal;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -124,6 +125,10 @@ public class SpecialtyControllerTest {
         doctorDto.setSpecialties(Set.of(specialtyDto));
         doctorDto.setExperience(5);
         doctorDto.setScheduleId(1L);
+        doctorDto.setBackground("background");
+        doctorDto.setPrice(new BigDecimal("1000.00"));
+        doctorDto.setServiceOffered("Service Offered");
+        doctorDto.setAbout("About");
         return doctorDto;
     }
 

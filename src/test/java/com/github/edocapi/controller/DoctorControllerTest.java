@@ -19,6 +19,7 @@ import com.github.edocapi.dto.SpecialtyDto;
 import com.github.edocapi.dto.UpdateScheduleRequestDto;
 import com.github.edocapi.model.Appointment;
 import com.github.edocapi.model.TimePeriod;
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -429,6 +430,9 @@ public class DoctorControllerTest {
                 .setExperience(requestDto.getExperience())
                 .setScheduleId(doctorScheduleDto.getId())
                 .setAverageRating(0.0)
+                .setPrice(requestDto.getPrice())
+                .setAbout(requestDto.getAbout())
+                .setServiceOffered(requestDto.getServiceOffered())
                 .setSpecialties(Set.of(specialtyDto));
     }
 
@@ -452,6 +456,9 @@ public class DoctorControllerTest {
                 .setLastName("Doe")
                 .setBackground("Background")
                 .setPhone("0123456789")
+                .setAbout("About")
+                .setPrice(BigDecimal.valueOf(1000))
+                .setServiceOffered("Service Offered")
                 .setExperience(5)
                 .setSpecialtyIds(Set.of(specialtyDto.getId()));
     }
@@ -465,6 +472,9 @@ public class DoctorControllerTest {
                 .setBackground("Background")
                 .setPhone("0123456789")
                 .setExperience(5)
+                .setPrice(BigDecimal.valueOf(1000))
+                .setServiceOffered("Service Offered")
+                .setAbout("About")
                 .setSpecialtyIds(Set.of(specialtyDto.getId()));
     }
 }

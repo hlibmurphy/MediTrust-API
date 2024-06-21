@@ -3,6 +3,7 @@ package com.github.edocapi.service.impl;
 import com.github.edocapi.dto.AppointmentDto;
 import com.github.edocapi.dto.AvailableSlotsDto;
 import com.github.edocapi.dto.CreateAppointmentRequestDto;
+import com.github.edocapi.dto.UpdateAppointmentStatusDto;
 import com.github.edocapi.exception.AppointmentException;
 import com.github.edocapi.mapper.AppointmentMapper;
 import com.github.edocapi.model.Appointment;
@@ -70,5 +71,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<Appointment> appointments = appointmentRepository
                 .findAppointmentsByUserId(userId);
         return appointmentMapper.toDtos(appointments);
+    }
+
+    @Override
+    public AppointmentDto updateStatus(Long appointmentId, Long userId,
+                                       UpdateAppointmentStatusDto updateAppointmentStatusDto) {
+        Appointment appointment = appointmentRepository.findByIdAndUserId(appointmentId, userId)
+                .orElseThrow(() -> new AppointmentException("Appointment with id "
+                        + appointmentId + " and user id " + userId + " not found"));
+        appointment.setStatus(updateAppointmentStatusDto.getStatus());
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return appointmentMapper.toDto(savedAppointment);
     }
 }

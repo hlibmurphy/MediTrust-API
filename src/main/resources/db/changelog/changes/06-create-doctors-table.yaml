@@ -32,6 +32,21 @@ databaseChangeLog:
                   name: background
                   type: varchar(255)
               - column:
+                  name: price
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: about
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_offered
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
                   name: schedule_id
                   type: bigint
               - column:

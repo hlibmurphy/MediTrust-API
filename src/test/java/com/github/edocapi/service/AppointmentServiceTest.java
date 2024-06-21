@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.github.edocapi.dto.AppointmentDto;
 import com.github.edocapi.dto.AvailableSlotsDto;
 import com.github.edocapi.dto.CreateAppointmentRequestDto;
+import com.github.edocapi.dto.UpdateAppointmentStatusDto;
 import com.github.edocapi.exception.AppointmentException;
 import com.github.edocapi.mapper.AppointmentMapper;
 import com.github.edocapi.model.Appointment;
@@ -158,6 +159,36 @@ public class AppointmentServiceTest {
         });
     }
 
+    @Test
+    @DisplayName("Update appointment's status")
+    public void updateStatus_withUpdateAppointmentStatusDto_shouldReturnAppointment() {
+        Doctor doctor = createDoctor();
+        User user = createUser();
+        Appointment appointment = createAppointment(user, doctor,
+                LocalTime.of(9, 0, 0),
+                LocalTime.of(10, 0, 0));
+
+        when(appointmentRepository.findByIdAndUserId(anyLong(), anyLong()))
+                .thenReturn(Optional.of(appointment));
+        appointment.setStatus(Appointment.Status.CANCELED);
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(appointmentMapper.toDto(any(Appointment.class))).thenReturn(mapToDto(appointment));
+
+        UpdateAppointmentStatusDto updateAppointmentStatusDto = new UpdateAppointmentStatusDto()
+                .setStatus(Appointment.Status.CANCELED);
+        AppointmentDto actual = appointmentService.updateStatus(appointment.getId(), user.getId(),
+                updateAppointmentStatusDto);
+
+        Assertions.assertEquals(Appointment.Status.CANCELED, actual.getStatus(),
+                "The status should be CANCELED");
+        verify(appointmentRepository, times(1))
+                .findByIdAndUserId(anyLong(), anyLong());
+        verify(appointmentRepository, times(1))
+                .save(any(Appointment.class));
+        verify(appointmentMapper, times(1))
+                .toDto(any(Appointment.class));
+    }
+
     private User createUser() {
         User user = new User();
         user.setId(1L);
@@ -194,12 +225,12 @@ public class AppointmentServiceTest {
                 appointment.getDate(),
                 appointment.isOnline(),
                 1L,
-               Appointment.Status.SCHEDULED
+                appointment.getStatus()
         );
     }
 
-    private Appointment createAppointment(User user, Doctor doctor, LocalTime startTime,
-                                          LocalTime endTime) {
+    private Appointment createAppointment(User user, Doctor doctor,
+                                          LocalTime startTime, LocalTime endTime) {
         Appointment appointment = new Appointment();
         appointment.setId(1L);
         appointment.setDoctor(doctor);
@@ -208,6 +239,7 @@ public class AppointmentServiceTest {
         appointment.setTimePeriod(timePeriod);
         appointment.setOnline(false);
         appointment.setUser(user);
+        appointment.setStatus(Appointment.Status.SCHEDULED);
         return appointment;
     }
 
