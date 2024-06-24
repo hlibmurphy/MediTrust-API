@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-doctors-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: doctors
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone
+                  type: varchar(13)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: background
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: about
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_offered
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: schedule_id
+                  type: bigint
+              - column:
+                  name: experience
+                  type: int
+              - column:
+                  name: rating_sum
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: average_rating
+                  type: double
+                  defaultValueNumeric: 0.0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: bit
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: doctors
+            baseColumnNames: schedule_id
+            referencedTableName: doctor_schedules
+            referencedColumnNames: id
+            constraintName: fk_doctors_doctor_schedules_id

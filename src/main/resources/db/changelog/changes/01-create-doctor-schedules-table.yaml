@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-doctor-schedules-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: doctor_schedules
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: appointment_duration_in_mins
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: bit
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

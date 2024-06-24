@@ -1,0 +1,2 @@
+insert into doctors (id, first_name, last_name, phone, background, price, about, service_offered, schedule_id, average_rating, experience, is_deleted)
+values (1, 'John', 'Doe', '0123456789', 'background', 1000.0, 'About', 'Service Offered', 1, 0, 5, false);

@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-doctor-schedule-lunch-hours-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: doctor_schedule_lunch_hours
+            columns:
+              - column:
+                  name: doctor_schedule_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: time
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: doctor_schedule_lunch_hours
+            baseColumnNames: doctor_schedule_id
+            referencedTableName: doctor_schedules
+            referencedColumnNames: id
+            constraintName: fk_doctor_schedule_lunch_hours_doctor_schedules_id
