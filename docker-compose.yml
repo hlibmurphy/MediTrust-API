@@ -4,7 +4,7 @@ services:
   mysqldb:
     image: mysql:8.0
     restart: unless-stopped
-    env_file: .env.template
+    env_file: .env
     environment:
       - MYSQLDB_USER=$MYSQL_USER
       - MYSQLDB_PASSWORD=$MYSQL_PASSWORD
@@ -21,9 +21,9 @@ services:
     depends_on:
       - mysqldb
     restart: on-failure
-    image: meditrust-service
+    image: meditrust-api
     build: .
-    env_file: .env.template
+    env_file: .env
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
       - $DEBUG_PORT:$DEBUG_PORT

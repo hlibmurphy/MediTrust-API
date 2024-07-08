@@ -7,9 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class EDocApiApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(EDocApiApplication.class, args);
     }
-
 }
