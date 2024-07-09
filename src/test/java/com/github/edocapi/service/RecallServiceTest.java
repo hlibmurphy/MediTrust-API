@@ -10,6 +10,7 @@ import com.github.edocapi.model.Recall;
 import com.github.edocapi.repository.RecallRepository;
 import com.github.edocapi.service.impl.RecallServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +29,8 @@ public class RecallServiceTest {
     private RecallServiceImpl recallService;
 
     @Test
-    public void addNumber_withRecallRequestDto_shouldSaveNumber() {
+    @DisplayName("Add phone number")
+    public void addPhoneNumber_withRecallRequestDto_shouldSavePhoneNumber() {
         Recall recall = createRecall();
         when(recallMapper.toModel(any(RecallRequestDto.class)))
                 .thenReturn(recall);
@@ -38,7 +40,7 @@ public class RecallServiceTest {
         when(recallMapper.toDto(any(Recall.class)))
                 .thenReturn(expected);
         RecallRequestDto recallRequestDto = createRecallRequestDto();
-        RecallDto actual = recallService.addNumber(recallRequestDto);
+        RecallDto actual = recallService.addPhoneNumber(recallRequestDto);
         Assertions.assertEquals(expected, actual,
                 "The retrieved DTO should match the expected one");
     }

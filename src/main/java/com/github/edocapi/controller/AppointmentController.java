@@ -27,7 +27,7 @@ public class AppointmentController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Operation(description = "")
+    @Operation(description = "Get user's appointment")
     public List<AppointmentDto> getAppointments(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return appointmentService.get(user.getId());
@@ -35,6 +35,7 @@ public class AppointmentController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(description = "Update user's own appointment status")
     public AppointmentDto updateAppointmentStatus(Authentication authentication,
                                             @PathVariable Long id,
                                             @Valid @RequestBody

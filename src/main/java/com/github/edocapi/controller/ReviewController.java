@@ -4,6 +4,7 @@ import com.github.edocapi.dto.CreateReviewRequestDto;
 import com.github.edocapi.dto.ReviewDto;
 import com.github.edocapi.model.User;
 import com.github.edocapi.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class ReviewController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(description = "Create a doctor reviews")
     public ReviewDto createReview(@Valid @RequestBody CreateReviewRequestDto reviewRequestDto,
                                   Authentication authentication) {
         User user = (User) authentication.getPrincipal();

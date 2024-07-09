@@ -3,6 +3,7 @@ package com.github.edocapi.controller;
 import com.github.edocapi.dto.RecallDto;
 import com.github.edocapi.dto.RecallRequestDto;
 import com.github.edocapi.service.RecallService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,8 @@ public class RecallController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RecallDto addNumber(@Valid @RequestBody RecallRequestDto requestDto) {
-        return recallService.addNumber(requestDto);
+    @Operation(description = "Add phone number to list of numbers to call")
+    public RecallDto addPhoneNumber(@Valid @RequestBody RecallRequestDto requestDto) {
+        return recallService.addPhoneNumber(requestDto);
     }
 }

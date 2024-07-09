@@ -16,7 +16,7 @@ public class RecallServiceImpl implements RecallService {
     private final RecallMapper recallMapper;
 
     @Override
-    public RecallDto addNumber(RecallRequestDto requestDto) {
+    public RecallDto addPhoneNumber(RecallRequestDto requestDto) {
         Recall recall = recallMapper.toModel(requestDto);
         recallRepository.save(recall);
         return recallMapper.toDto(recall);

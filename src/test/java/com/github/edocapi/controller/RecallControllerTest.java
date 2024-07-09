@@ -37,7 +37,7 @@ public class RecallControllerTest {
 
     @Test
     @DisplayName("Post recall")
-    public void addNumber_withRecallRequestDto_shouldReturnNumber() throws Exception {
+    public void addNumber_withRecallRequestDto_shouldReturnPhoneNumber() throws Exception {
         RecallRequestDto requestDto = createRecallRequestDto();
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
         MvcResult result = mockMvc.perform(
