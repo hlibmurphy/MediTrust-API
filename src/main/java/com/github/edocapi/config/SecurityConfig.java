@@ -41,7 +41,7 @@ public class SecurityConfig {
                                         "/time-slots/**", "/specialties/**",
                                         "/reviews/**")
                                 .permitAll()
-                                .requestMatchers("/auth/**", "/error",
+                                .requestMatchers("/verification/**", "/auth/**", "/error",
                                         "/swagger-ui.html", "/v3/api-docs/**",
                                         "/swagger-ui/**", "/webjars/**",
                                         "/recall/**")

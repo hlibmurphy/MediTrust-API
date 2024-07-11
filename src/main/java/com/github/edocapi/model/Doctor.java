@@ -45,7 +45,7 @@ public class Doctor {
     private String about;
     private String serviceOffered;
     private int experience;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "doctors_specialties",
             joinColumns = @JoinColumn(name = "doctor_id"),
