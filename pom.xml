@@ -162,6 +162,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>meditrust-app</finalName>
+        <finalName>meditrust-api</finalName>
     </build>
 </project>
