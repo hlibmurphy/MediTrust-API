@@ -69,3 +69,4 @@ jobs:
             docker stop meditrust-api || true
             docker rm meditrust-api || true
             docker run -d --name meditrust-api -p 80:80 ${{ secrets.DOCKER_HUB_USERNAME }}/meditrust-api:latest
+          debug: true
