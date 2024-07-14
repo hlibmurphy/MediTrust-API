@@ -4,6 +4,7 @@ import com.github.edocapi.dto.AppointmentDto;
 import com.github.edocapi.dto.UpdateAppointmentStatusDto;
 import com.github.edocapi.model.User;
 import com.github.edocapi.service.AppointmentService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class AppointmentController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(description = "Get user's appointment")
     public List<AppointmentDto> getAppointments(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return appointmentService.get(user.getId());
@@ -33,6 +35,7 @@ public class AppointmentController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(description = "Update user's own appointment status")
     public AppointmentDto updateAppointmentStatus(Authentication authentication,
                                             @PathVariable Long id,
                                             @Valid @RequestBody

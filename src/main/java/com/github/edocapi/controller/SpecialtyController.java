@@ -5,6 +5,7 @@ import com.github.edocapi.dto.DoctorDto;
 import com.github.edocapi.dto.SpecialtyDto;
 import com.github.edocapi.service.DoctorService;
 import com.github.edocapi.service.SpecialtyService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
@@ -37,12 +38,14 @@ public class SpecialtyController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(description = "Create a new doctor specialty")
     public SpecialtyDto createSpecialty(
             @Valid @RequestBody CreateSpecialtyRequestDto specialtyRequestDto) {
         return specialtyService.save(specialtyRequestDto);
     }
 
     @GetMapping("/{id}/doctors")
+    @Operation(description = "Get doctor by specialty ID")
     public List<DoctorDto> getDoctorBySpecialtyId(@PathVariable @Positive Long id,
                                                  Pageable pageable) {
         return doctorService.getDoctorsBySpecialtyId(id, pageable);
