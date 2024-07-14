@@ -79,7 +79,8 @@ public class DoctorScheduleServiceTest {
         UpdateScheduleRequestDto updateRequestDto = createUpdateScheduleRequestDto();
         DoctorSchedule schedule = mapToModel(updateRequestDto);
         schedule.setId(scheduleId);
-        when(doctorScheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
+        when(doctorScheduleRepository.findByIdWithDetails(anyLong()))
+                .thenReturn(Optional.of(schedule));
         when(doctorScheduleRepository.save(any(DoctorSchedule.class))).thenReturn(schedule);
         DoctorScheduleDto expected = mapToDto(schedule);
         when(doctorScheduleMapper.toDto(any(DoctorSchedule.class))).thenReturn(expected);
