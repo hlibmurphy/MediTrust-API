@@ -44,10 +44,10 @@ public class OtpServiceImpl implements OtpService {
 
             System.out.println(verificationCheck.getStatus());
         } catch (Exception e) {
-            return new ResponseEntity<>("Phone was successfully verified", HttpStatus.OK);
+            return new ResponseEntity<>("Invalid code",
+                    HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Invalid code",
-                HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Phone was successfully verified", HttpStatus.OK);
     }
 }
