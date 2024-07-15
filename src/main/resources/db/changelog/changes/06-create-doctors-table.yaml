@@ -39,13 +39,9 @@ databaseChangeLog:
               - column:
                   name: about
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: service_offered
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: schedule_id
                   type: bigint
