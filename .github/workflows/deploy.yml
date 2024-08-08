@@ -4,9 +4,6 @@ on:
   push:
     branches: [ "main" ]
 
-env:
-  ECR_REPOSITORY: meditrust-api
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,11 +25,11 @@ jobs:
           mkdir artifacts && cp target/*.jar artifacts
           cd artifacts && ls
 
-      - name: Save artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: github-action-artifact
-          path: artifacts
+#      - name: Save artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: github-action-artifact
+#          path: artifacts
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -61,14 +58,17 @@ jobs:
 
       - name: Build and Push
         env:
+          ECR_REPOSITORY: meditrust-api
           ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
+          ECR_REGISTRY_ALIAS: ${{ secrets.ECR_REGISTRY_ALIAS }}
           ECR_REGISTRY_ALIAS: ${{ env.ECR_REGISTRY_ALIAS }}
         run: |
           echo "ECR_REGISTRY: $ECR_REGISTRY"
           echo "ECR_REGISTRY_ALIAS: $ECR_REGISTRY_ALIAS"
           docker build -t $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
+    outputs:
+      registry: ${{ steps.login-ecr-public.outputs.registry }}
 
   deploy:
     needs: build
@@ -80,7 +80,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_ECR_REGION }}
 
       - name: Install SSH key
         uses: webfactory/ssh-agent@v0.5.3
@@ -88,11 +88,14 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_KEY }}
 
       - name: SSH and deploy Docker container
+        env:
+          ECR_REPOSITORY: meditrust-api
+          ECR_REGISTRY: ${{ needs.build.outputs.registry }}
+          ECR_REGISTRY_ALIAS: ${{ secrets.ECR_REGISTRY_ALIAS }}
         run: |
           ssh -o StrictHostKeyChecking=no -t ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
-          sudo docker stop meditrust-api || true
-          sudo docker rm -f meditrust-api || true
-          sudo docker rmi public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest || true
-          sudo docker pull public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
-          sudo docker run --env-file .env -d --name meditrust-api -p 80:8080 public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
+          sudo docker stop $ECR_REPOSITORY || true
+          sudo docker rm -f $ECR_REPOSITORY || true
+          sudo docker rmi $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest || true
+          sudo docker run --env-file .env --name $ECR_REPOSITORY -p 80:8080 $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
           EOF
