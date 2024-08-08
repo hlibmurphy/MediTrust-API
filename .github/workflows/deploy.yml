@@ -94,6 +94,7 @@ jobs:
           ECR_REGISTRY_ALIAS: ${{ secrets.ECR_REGISTRY_ALIAS }}
         run: |
           ssh -o StrictHostKeyChecking=no -t ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          echo "uri = $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest"
           sudo docker stop $ECR_REPOSITORY || true
           sudo docker rm -f $ECR_REPOSITORY || true
           sudo docker rmi $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest || true
