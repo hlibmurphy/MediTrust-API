@@ -6,7 +6,7 @@ on:
 
 env:
   ECR_REPOSITORY: meditrust-api
-  ECR_REGISTRY_ALIAS: c8r6j0i5
+  ECR_REGISTRY_ALIAS: ${{ secrets.ECR_URI }}
 
 jobs:
   build:
