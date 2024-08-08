@@ -6,7 +6,6 @@ on:
 
 env:
   ECR_REPOSITORY: meditrust-api
-  ECR_REGISTRY_ALIAS: ${{ secrets.ECR_URI }}
 
 jobs:
   build:
@@ -42,6 +41,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Get ECR Registry Alias
+        id: get-registry-alias
+        run: |
+          ALIAS=$(aws ecr-public describe-registries --query 'registries[0].alias' --output text)
+          echo "ECR_REGISTRY_ALIAS=$ALIAS" >> $GITHUB_ENV
+
       - name: Login to Amazon ECR Public
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v2
@@ -52,6 +57,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+          ECR_REGISTRY_ALIAS: ${{ env.ECR_REGISTRY_ALIAS }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
@@ -78,7 +84,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -t ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
           sudo docker stop meditrust-api || true
           sudo docker rm -f meditrust-api || true
-          sudo docker rmi ${{ secrets.ECR_URI }}:latest || true
-          sudo docker pull ${{ secrets.ECR_URI }}:latest
-          sudo docker run --env-file .env --name meditrust-api -p 80:8080 ${{ secrets.ECR_URI }}
+          sudo docker rmi public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest || true
+          sudo docker pull public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
+          sudo docker run --env-file .env -d --name meditrust-api -p 80:8080 public.ecr.aws/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
           EOF
