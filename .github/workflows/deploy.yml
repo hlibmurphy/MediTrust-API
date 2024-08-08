@@ -78,7 +78,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -t ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
           sudo docker stop meditrust-api || true
           sudo docker rm -f meditrust-api || true
-          sudo docker rmi public.ecr.aws/d5t6p1y7/meditrust-api:latest || true
-          sudo docker pull public.ecr.aws/d5t6p1y7/meditrust-api:latest
-          sudo docker run --env-file .env --name meditrust-api -p 80:8080 public.ecr.aws/d5t6p1y7/meditrust-api:latest
+          sudo docker rmi ${{ secrets.ECR_URI }}:latest || true
+          sudo docker pull ${{ secrets.ECR_URI }}:latest
+          sudo docker run --env-file .env --name meditrust-api -p 80:8080 ${{ secrets.ECR_URI }}
           EOF
