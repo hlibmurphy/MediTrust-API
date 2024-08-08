@@ -41,11 +41,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
       - name: Get ECR Registry Alias
         id: get-registry-alias
         run: |
           ALIAS=$(aws ecr-public describe-registries --query 'registries[0].alias' --output text)
           echo "ECR_REGISTRY_ALIAS=$ALIAS" >> $GITHUB_ENV
+          echo "ECR_REGISTRY_ALIAS=$ALIAS"
 
       - name: Login to Amazon ECR Public
         id: login-ecr-public
@@ -59,6 +65,8 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           ECR_REGISTRY_ALIAS: ${{ env.ECR_REGISTRY_ALIAS }}
         run: |
+          echo "ECR_REGISTRY: $ECR_REGISTRY"
+          echo "ECR_REGISTRY_ALIAS: $ECR_REGISTRY_ALIAS"
           docker build -t $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest
 
