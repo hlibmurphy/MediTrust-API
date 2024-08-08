@@ -62,7 +62,6 @@ jobs:
           ECR_REPOSITORY: meditrust-api
           ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           ECR_REGISTRY_ALIAS: ${{ secrets.ECR_REGISTRY_ALIAS }}
-          ECR_REGISTRY_ALIAS: ${{ env.ECR_REGISTRY_ALIAS }}
         run: |
           echo "ECR_REGISTRY: $ECR_REGISTRY"
           echo "ECR_REGISTRY_ALIAS: $ECR_REGISTRY_ALIAS"
