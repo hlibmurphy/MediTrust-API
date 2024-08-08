@@ -88,12 +88,11 @@ jobs:
           ssh-private-key: ${{ secrets.EC2_KEY }}
 
       - name: SSH and deploy Docker container
-        env:
-          ECR_REPOSITORY: meditrust-api
-          ECR_REGISTRY: ${{ needs.build.outputs.registry }}
-          ECR_REGISTRY_ALIAS: ${{ secrets.ECR_REGISTRY_ALIAS }}
         run: |
           ssh -o StrictHostKeyChecking=no -t ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          export ECR_REGISTRY="${{ needs.build.outputs.registry }}"
+          export ECR_REGISTRY_ALIAS="${{ secrets.ECR_REGISTRY_ALIAS }}"
+          export ECR_REPOSITORY="meditrust-api"
           echo "uri = $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:latest"
           sudo docker stop $ECR_REPOSITORY || true
           sudo docker rm -f $ECR_REPOSITORY || true
