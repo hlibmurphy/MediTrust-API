@@ -19,7 +19,7 @@ These instructions will help you set up the project on your local machine for de
 
 ### Prerequisites
 Ensure you have the following software installed:
-- [Java JDK](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- [Java JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - [Maven](https://maven.apache.org/install.html)
 - [MySQL](https://dev.mysql.com/downloads/installer/)
 - [Docker](https://www.docker.com/get-started)
