@@ -77,13 +77,32 @@ public class AuthControllerTest {
                                 .content(jsonRequest)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().isOk())
-                .andReturn();
+                    .andExpect(status().isOk())
+                    .andReturn();
 
         UserLoginResponseDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), UserLoginResponseDto.class);
 
         assertNotNull(actual.getToken());
+    }
+
+    @Test
+    @DisplayName("Login with a wrong password")
+    @Sql(scripts = "classpath:db/users/add-user-to-users-table.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:db/users/remove-user-from-users-table.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void login_passwordIsWrong_shouldReturn401() throws Exception {
+        UserLoginRequestDto userLoginRequestDto = createUserLoginRequestDto();
+        userLoginRequestDto.setPassword("wrongPassword");
+        String jsonRequest = objectMapper.writeValueAsString(userLoginRequestDto);
+
+        mockMvc.perform(
+                post("/auth/login")
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isUnauthorized());
     }
 
     private UserLoginRequestDto createUserLoginRequestDto() {

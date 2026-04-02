@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -40,6 +41,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> handleJwtException(
             JwtException ex) {
+        ErrorResponse body = new ErrorResponse(ex, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(
+            AuthenticationException ex) {
         ErrorResponse body = new ErrorResponse(ex, HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
